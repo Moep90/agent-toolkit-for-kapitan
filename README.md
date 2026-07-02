@@ -32,9 +32,10 @@ in place.
 Prerequisite: a `kapitan` CLI on PATH, or the project's `./kapitan` Docker wrapper. The MCP
 server runs where the real CLI lives.
 
-Until the package is on PyPI, `uvx kapitan-mcp-server` runs it straight from this repo:
-`uvx --from git+https://github.com/Moep90/agent-toolkit-for-kapitan#subdirectory=tools/kapitan-mcp kapitan-mcp-server`.
-Shortened to `uvx kapitan-mcp-server` below; swap in the `--from` form until the release lands.
+The package is not on PyPI yet, so the config below runs the server straight from the repo
+with `uvx --from git+...`. Once it is published, that whole `--from` argument collapses to a
+plain `uvx kapitan-mcp-server`. The server and its packaging are described for MCP clients in
+[`server.json`](server.json) (the Model Context Protocol registry manifest).
 
 ### Claude Code
 
@@ -58,7 +59,13 @@ Add the server to `.cursor/mcp.json` in your Kapitan repo, and copy the Cursor r
   "mcpServers": {
     "kapitan": {
       "command": "uvx",
-      "args": ["kapitan-mcp-server", "--project-root", "."]
+      "args": [
+        "--from",
+        "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git#subdirectory=tools/kapitan-mcp",
+        "kapitan-mcp-server",
+        "--project-root",
+        "."
+      ]
     }
   }
 }
@@ -73,7 +80,7 @@ Add the server to `~/.codex/config.toml`:
 ```toml
 [mcp_servers.kapitan]
 command = "uvx"
-args = ["kapitan-mcp-server", "--project-root", "/path/to/your/kapitan/repo"]
+args = ["--from", "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git#subdirectory=tools/kapitan-mcp", "kapitan-mcp-server", "--project-root", "/path/to/your/kapitan/repo"]
 ```
 
 Drop `rules/AGENTS.md` into your repo so Codex follows the Kapitan guardrails.

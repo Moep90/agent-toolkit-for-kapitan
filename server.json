@@ -1,0 +1,22 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Moep90/agent-toolkit-for-kapitan",
+  "title": "Kapitan Agent Toolkit",
+  "description": "MCP server that lets AI agents inspect, compile, and diff Kapitan projects without guessing at the inventory or revealing secrets.",
+  "repository": {
+    "url": "https://github.com/Moep90/agent-toolkit-for-kapitan",
+    "source": "github"
+  },
+  "version": "0.0.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "kapitan-mcp-server",
+      "version": "0.0.0",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}
