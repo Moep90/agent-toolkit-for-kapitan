@@ -1,8 +1,7 @@
 name: CI
 
-# NOTE: before making this repo public, pin every third-party action to a full commit SHA
-# (OpenSSF Scorecard requirement) and let Dependabot keep the pins fresh. Version tags are
-# used here as a readable starting point.
+# All third-party actions are pinned to a full commit SHA with a version comment.
+# Dependabot updates both the SHA and the comment.
 
 on:
   pull_request:
@@ -20,8 +19,8 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
       - run: make -C . sync
       - run: make lint
       - run: make typecheck
@@ -36,8 +35,8 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
         with:
           python-version: ${{ matrix.python }}
       - run: make test
@@ -45,7 +44,7 @@ jobs:
   integration:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
       - run: uv --directory tools/kapitan-mcp sync --extra kapitan
       - run: uv --directory tools/kapitan-mcp run pytest -m "integration or e2e" --no-cov

@@ -1,7 +1,7 @@
 name: CodeQL
 
 # Static analysis of the Python code. Uses only GITHUB_TOKEN, no external key.
-# Pin actions to SHAs before going public.
+# Actions are pinned to full commit SHAs; Dependabot keeps them fresh.
 
 on:
   push:
@@ -22,8 +22,8 @@ jobs:
       actions: read
       contents: read
     steps:
-      - uses: actions/checkout@v7
-      - uses: github/codeql-action/init@v4
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: github/codeql-action/init@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4
         with:
           languages: python
-      - uses: github/codeql-action/analyze@v4
+      - uses: github/codeql-action/analyze@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4
