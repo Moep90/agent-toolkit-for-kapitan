@@ -6,8 +6,9 @@ the tag, and publishes a GitHub release with generated notes. Versioning is SemV
 package version is derived from the git tag by hatch-vcs, so nothing is committed back to the
 protected `main` branch.
 
-Because the default bump is `patch`, every merge produces at least a patch release. Use
-`feat:` for a minor bump and `feat!:` or a `BREAKING CHANGE:` footer for a major bump.
+A release is cut only when the commits since the last tag warrant one: `fix:` bumps the
+patch, `feat:` the minor, and `feat!:` or a `BREAKING CHANGE:` footer the major. Pushes that
+are only `docs:`, `chore:`, or `ci:` do not cut a release.
 
 ## Publishing to PyPI and the MCP registry
 
