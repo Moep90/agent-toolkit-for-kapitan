@@ -29,13 +29,14 @@ in place.
 
 ## Install
 
-Prerequisite: a `kapitan` CLI on PATH, or the project's `./kapitan` Docker wrapper. The MCP
-server runs where the real CLI lives.
+The config below bundles the `kapitan` CLI into the server's isolated environment with
+`--with kapitan`, so it works out of the box. If your project pins kapitan or uses the
+`./kapitan` Docker wrapper, drop `--with kapitan` and run the server where that CLI lives.
 
-The package is not on PyPI yet, so the config below runs the server straight from the repo
-with `uvx --from git+...`. Once it is published, that whole `--from` argument collapses to a
-plain `uvx kapitan-mcp-server`. The server and its packaging are described for MCP clients in
-[`server.json`](server.json) (the Model Context Protocol registry manifest).
+The package is not on PyPI yet, so the config runs the server straight from the repo with
+`uvx --from git+...`. Once it is published, that `--from` argument collapses to a plain
+`uvx --with kapitan kapitan-mcp-server`. The server and its packaging are described for MCP
+clients in [`server.json`](server.json) (the Model Context Protocol registry manifest).
 
 ### Claude Code
 
@@ -60,6 +61,8 @@ Add the server to `.cursor/mcp.json` in your Kapitan repo, and copy the Cursor r
     "kapitan": {
       "command": "uvx",
       "args": [
+        "--with",
+        "kapitan",
         "--from",
         "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git#subdirectory=tools/kapitan-mcp",
         "kapitan-mcp-server",
@@ -80,7 +83,7 @@ Add the server to `~/.codex/config.toml`:
 ```toml
 [mcp_servers.kapitan]
 command = "uvx"
-args = ["--from", "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git#subdirectory=tools/kapitan-mcp", "kapitan-mcp-server", "--project-root", "/path/to/your/kapitan/repo"]
+args = ["--with", "kapitan", "--from", "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git#subdirectory=tools/kapitan-mcp", "kapitan-mcp-server", "--project-root", "/path/to/your/kapitan/repo"]
 ```
 
 Drop `rules/AGENTS.md` into your repo so Codex follows the Kapitan guardrails.

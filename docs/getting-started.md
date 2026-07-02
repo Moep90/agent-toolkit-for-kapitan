@@ -46,11 +46,22 @@ Add the server to your client's MCP config:
   "mcpServers": {
     "kapitan": {
       "command": "uvx",
-      "args": ["kapitan-mcp-server", "--project-root", "/path/to/your/kapitan/repo"]
+      "args": [
+        "--with",
+        "kapitan",
+        "--from",
+        "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git#subdirectory=tools/kapitan-mcp",
+        "kapitan-mcp-server",
+        "--project-root",
+        "/path/to/your/kapitan/repo"
+      ]
     }
   }
 }
 ```
+
+`--with kapitan` bundles the kapitan CLI into the server's environment. Drop it if your
+project pins kapitan or uses the `./kapitan` Docker wrapper.
 
 Drop `rules/AGENTS.md` (or the Cursor rules in `rules/cursor/kapitan.mdc`) into your repo so
 the agent follows the Kapitan guardrails.
