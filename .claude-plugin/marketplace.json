@@ -1,0 +1,21 @@
+{
+  "name": "agent-toolkit-for-kapitan",
+  "owner": {
+    "name": "kapicorp"
+  },
+  "metadata": {
+    "description": "MCP server, skills, and rules that make AI agents good at Kapitan projects."
+  },
+  "plugins": [
+    {
+      "name": "kapitan-core",
+      "source": "./plugins/kapitan-core",
+      "description": "Kapitan MCP server plus the inventory-model, secrets-refs, and debugging-compile skills."
+    },
+    {
+      "name": "kapitan-generators",
+      "source": "./plugins/kapitan-generators",
+      "description": "Skills for the kapicorp generators, kadet authoring, and project scaffolding."
+    }
+  ]
+}

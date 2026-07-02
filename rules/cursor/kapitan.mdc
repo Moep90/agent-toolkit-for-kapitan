@@ -1,0 +1,23 @@
+---
+description: Rules for editing Kapitan inventories and templates
+globs:
+  - inventory/**
+  - components/**
+  - "**/.kapitan"
+alwaysApply: false
+---
+
+# Kapitan rules
+
+1. Never hand-edit files under `compiled/`. Change the inventory or a template, then
+   recompile.
+2. After any inventory or template change, compile and diff against the committed output
+   before finishing. An unexpected diff in an untouched target is a regression.
+3. Read the resolved inventory (`kapitan inventory -t <target>`) instead of merging classes
+   by hand. Parameters merge in include order, the target wins last, and `${...}` resolves
+   only after the full merge.
+4. Never reveal secret values. Do not run `kapitan refs --reveal` or print ref values. Refs
+   stay as `?{backend:path}` tokens.
+5. Respect the configured inventory backend; do not switch backends to fix an error.
+6. Interpolation syntax depends on the backend: colon for reclass, dot for omegaconf. Check
+   `.kapitan` first.

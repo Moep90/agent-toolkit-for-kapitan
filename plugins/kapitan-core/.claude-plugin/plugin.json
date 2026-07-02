@@ -1,0 +1,8 @@
+{
+  "name": "kapitan-core",
+  "version": "0.0.0",
+  "description": "Kapitan MCP server plus core skills: the inventory model, secret refs, and compile debugging.",
+  "author": {
+    "name": "kapicorp"
+  }
+}

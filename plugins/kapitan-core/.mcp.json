@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "kapitan": {
+      "command": "uvx",
+      "args": ["kapitan-mcp-server"]
+    }
+  }
+}

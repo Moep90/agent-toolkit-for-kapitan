@@ -1,0 +1,51 @@
+name: CI
+
+# NOTE: before making this repo public, pin every third-party action to a full commit SHA
+# (OpenSSF Scorecard requirement) and let Dependabot keep the pins fresh. Version tags are
+# used here as a readable starting point.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: make -C . sync
+      - run: make lint
+      - run: make typecheck
+      - run: make validate-skills
+      - run: make check-plugins
+
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.10", "3.11", "3.12", "3.13"]
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: make test
+
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv --directory tools/kapitan-mcp sync --extra kapitan
+      - run: uv --directory tools/kapitan-mcp run pytest -m "integration or e2e" --no-cov
