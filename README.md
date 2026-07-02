@@ -41,7 +41,7 @@ Shortened to `uvx kapitan-mcp-server` below; swap in the `--from` form until the
 Install the plugin from this repo acting as a marketplace:
 
 ```
-/plugin marketplace add Moep90/agent-toolkit-for-kapitan
+/plugin marketplace add https://github.com/Moep90/agent-toolkit-for-kapitan.git
 /plugin install kapitan-core
 ```
 

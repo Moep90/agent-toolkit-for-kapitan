@@ -23,8 +23,13 @@ The server speaks MCP over stdio. Point any MCP client at it.
 
 Install the plugin from this repo acting as a marketplace:
 
+Run these one at a time (the marketplace URL and the install are separate commands):
+
 ```
-/plugin marketplace add kapicorp/agent-toolkit-for-kapitan
+/plugin marketplace add https://github.com/Moep90/agent-toolkit-for-kapitan.git
+```
+
+```
 /plugin install kapitan-core
 ```
 
