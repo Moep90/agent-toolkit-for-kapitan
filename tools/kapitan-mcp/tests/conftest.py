@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 import pytest
@@ -9,6 +10,12 @@ import pytest
 from kapitan_mcp.runner import CommandResult
 
 FIXTURES = Path(__file__).parent / "fixtures"
+
+# The stdlib helper scripts live at the repo root, outside the package. Put them on the path
+# so the unit tests can import them directly.
+_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_SCRIPTS))
 
 
 @pytest.fixture
