@@ -94,6 +94,8 @@ PLUGINS: dict[str, dict[str, object]] = {
         "skills": [
             "kapitan-kubernetes-generator",
             "kapitan-terraform-generator",
+            "kapitan-authoring-generator",
+            "kapitan-generator-wiring",
             "kapitan-writing-kadet",
             "kapitan-project-scaffolding",
         ],

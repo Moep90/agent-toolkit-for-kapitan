@@ -24,6 +24,7 @@ def test_create_server__registers_all_m1_tools(mini_inventory: Path) -> None:
         "kapitan_refs_list",
         "kapitan_compile",
         "kapitan_compile_diff",
+        "kapitan_generator_trace",
         "kapitan_lint",
     } <= names
 

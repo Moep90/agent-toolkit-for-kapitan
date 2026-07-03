@@ -21,7 +21,7 @@ from mcp.server.fastmcp import FastMCP
 from kapitan_mcp.errors import KapitanMcpError, error_response
 from kapitan_mcp.project import find_project_root
 from kapitan_mcp.tools import compile as compile_tools
-from kapitan_mcp.tools import inventory, lint, refs, search
+from kapitan_mcp.tools import generators, inventory, lint, refs, search
 
 structlog.configure(
     logger_factory=structlog.PrintLoggerFactory(file=sys.stderr),
@@ -104,6 +104,14 @@ def create_server(project_root: Path) -> FastMCP:
         committed compiled/ output. Never writes into compiled/. Run this before finishing
         an inventory or template change to review what it produces."""
         return _guard(compile_tools.compile_diff)(root, targets)
+
+    @mcp.tool(name="kapitan_generator_trace")
+    def kapitan_generator_trace(targets: list[str] | None = None) -> Any:
+        """Flag components/generators blocks that no kadet compile entry consumes: the
+        silent no-op where an inventory block emits nothing with no error. Reads the resolved
+        inventory (all targets if none given). Run after editing a generator block, before
+        kapitan_compile_diff. Catches unwired blocks, not mistyped keys inside a block."""
+        return _guard(generators.generator_trace)(root, targets)
 
     @mcp.tool(name="kapitan_lint")
     def kapitan_lint() -> Any:

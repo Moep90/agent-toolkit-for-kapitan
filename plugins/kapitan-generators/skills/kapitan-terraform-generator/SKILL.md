@@ -15,6 +15,10 @@ The Terraform generator produces Terraform configuration from the inventory, the
 the Kubernetes generator produces manifests. You describe providers and resources in the
 inventory; the generator writes the `.tf` output under `compiled/`.
 
+Do not hallucinate the schema. The inventory keys, resource shape, and the HCL-vs-reclass
+escaping rule live in [references/terraform-schema.md](references/terraform-schema.md); read
+it before adding or editing a provider or resource.
+
 ## Layout
 
 A target that uses the Terraform generator sets the provider and resource definitions in
@@ -24,9 +28,10 @@ files are output, not source: never hand-edit them, change the inventory and rec
 ## Providers and resources
 
 Set the provider (region, project, credentials source) in the inventory. Resources are
-described as structured entries the generator maps to Terraform resource blocks. Confirm the
-exact keys against the fetched generator version, because the schema evolves and differs
-between projects.
+described as structured entries the generator maps to Terraform resource blocks. The exact
+keys are in [references/terraform-schema.md](references/terraform-schema.md); they evolve
+between fetched versions, so confirm against the generator source under `system/` when one
+is missing.
 
 ## Secrets and state
 
