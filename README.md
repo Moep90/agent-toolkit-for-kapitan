@@ -38,6 +38,13 @@ The package is not on PyPI yet, so the config runs the server straight from the 
 `uvx --with kapitan kapitan-mcp-server`. The server and its packaging are described for MCP
 clients in [`server.json`](server.json) (the Model Context Protocol registry manifest).
 
+**Pin a version.** Every push to `main` cuts a `vX.Y.Z` tag ([releases]). The examples below
+pin the git ref to `@v0.0.5` for reproducible behaviour; bump it to the newest tag when you
+update, or drop the `@...` to track `main`. After PyPI publish, pin the released version
+instead (`kapitan-mcp-server==X.Y.Z`).
+
+[releases]: https://github.com/Moep90/agent-toolkit-for-kapitan/releases
+
 ### Claude Code
 
 Install the plugin from this repo acting as a marketplace:
@@ -64,7 +71,7 @@ Add the server to `.cursor/mcp.json` in your Kapitan repo, and copy the Cursor r
         "--with",
         "kapitan",
         "--from",
-        "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git#subdirectory=tools/kapitan-mcp",
+        "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git@v0.0.5#subdirectory=tools/kapitan-mcp",
         "kapitan-mcp-server",
         "--project-root",
         "."
@@ -83,7 +90,7 @@ Add the server to `~/.codex/config.toml`:
 ```toml
 [mcp_servers.kapitan]
 command = "uvx"
-args = ["--with", "kapitan", "--from", "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git#subdirectory=tools/kapitan-mcp", "kapitan-mcp-server", "--project-root", "/path/to/your/kapitan/repo"]
+args = ["--with", "kapitan", "--from", "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git@v0.0.5#subdirectory=tools/kapitan-mcp", "kapitan-mcp-server", "--project-root", "/path/to/your/kapitan/repo"]
 ```
 
 Drop `rules/AGENTS.md` into your repo so Codex follows the Kapitan guardrails.
@@ -92,8 +99,14 @@ Drop `rules/AGENTS.md` into your repo so Codex follows the Kapitan guardrails.
 
 Point the client at the `kapitan-mcp-server` command over stdio with a `--project-root`
 argument. The [tool reference](docs/mcp-server.md) lists every tool and its response shape.
-For non-plugin clients, adopt the skills by copying the relevant `skills/<name>/` directories
-into wherever your client loads Agent Skills, and add a rules file from `rules/`.
+For non-plugin clients, adopt the skills with the installer (copies the packages into your
+client's skills directory), then add a rules file from `rules/`:
+
+```
+python3 scripts/install_skills.py --list                 # see skills and categories
+python3 scripts/install_skills.py <skills-dir>           # install all
+python3 scripts/install_skills.py <skills-dir> --category core
+```
 
 ## Tools
 
