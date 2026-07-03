@@ -115,3 +115,22 @@ class CompileDiff(Response):
 class LintResult(Response):
     ok: bool
     output: str
+
+
+class GeneratorBlock(BaseModel):
+    path: str  # e.g. "components.web" or "generators.multus"
+    kind: str  # "component" | "generator"
+    wired: bool
+    matched_input_path: str | None = None
+    hint: str | None = None
+
+
+class TargetTrace(BaseModel):
+    target: str
+    backend: str
+    blocks: list[GeneratorBlock]
+
+
+class GeneratorTrace(Response):
+    targets: list[TargetTrace]
+    orphans: list[str] = []  # "<target>: <block path>" for every unwired block
