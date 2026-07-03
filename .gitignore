@@ -24,3 +24,6 @@ htmlcov/
 
 # Local Claude Code config (settings are user-level, not committed)
 .claude/
+
+# Superpowers planning docs stay local, never committed
+docs/superpowers/
