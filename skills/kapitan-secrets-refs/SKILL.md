@@ -1,5 +1,6 @@
 ---
 name: kapitan-secrets-refs
+category: core
 description: >-
   Use whenever a Kapitan project involves secrets, refs, or the ?{...} tag syntax: gpg,
   awskms, gcpkms, azkv, vaultkv, base64, plain refs, creating ref placeholders, or Tesoro.

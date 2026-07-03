@@ -22,7 +22,8 @@ in place.
 |---|---|
 | `tools/kapitan-mcp/` | Python MCP server (FastMCP, stdio) wrapping the Kapitan CLI |
 | `skills/` | Agent Skills packages, portable across clients |
-| `plugins/` | Claude Code plugins bundling skills and MCP config |
+| `plugins/` | Plugins bundling skills and MCP config, with per-client manifests |
+| `.claude-plugin/`, `.cursor-plugin/`, `.agents/plugins/` | Marketplace manifests, one per client (generated) |
 | `rules/` | AGENTS.md / CLAUDE.md / Cursor rules snippets |
 | `docs/` | Getting started, tool reference, ADRs |
 | `examples/demo-project/` | A tiny compilable Kapitan project used in docs and e2e tests |
@@ -37,6 +38,13 @@ The package is not on PyPI yet, so the config runs the server straight from the 
 `uvx --from git+...`. Once it is published, that `--from` argument collapses to a plain
 `uvx --with kapitan kapitan-mcp-server`. The server and its packaging are described for MCP
 clients in [`server.json`](server.json) (the Model Context Protocol registry manifest).
+
+**Pin a version.** Every push to `main` cuts a `vX.Y.Z` tag ([releases]). The examples below
+pin the git ref to `@v0.0.5` for reproducible behaviour; bump it to the newest tag when you
+update, or drop the `@...` to track `main`. After PyPI publish, pin the released version
+instead (`kapitan-mcp-server==X.Y.Z`).
+
+[releases]: https://github.com/Moep90/agent-toolkit-for-kapitan/releases
 
 ### Claude Code
 
@@ -53,7 +61,15 @@ generator, kadet, and scaffolding skills. Then open a Kapitan repo and ask a que
 
 ### Cursor
 
-Add the server to `.cursor/mcp.json` in your Kapitan repo, and copy the Cursor rule:
+Add this repo as a plugin marketplace (Cursor Settings → Plugins → Team Marketplaces →
+`https://github.com/Moep90/agent-toolkit-for-kapitan`), then install the `kapitan-core`
+plugin. The plugin carries the MCP server config, so you never paste the server URL. Copy
+`rules/cursor/kapitan.mdc` into your repo's `.cursor/rules/`.
+
+<details>
+<summary>Manual config, without the marketplace</summary>
+
+Add the server to `.cursor/mcp.json` in your Kapitan repo:
 
 ```json
 {
@@ -64,7 +80,7 @@ Add the server to `.cursor/mcp.json` in your Kapitan repo, and copy the Cursor r
         "--with",
         "kapitan",
         "--from",
-        "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git#subdirectory=tools/kapitan-mcp",
+        "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git@v0.0.5#subdirectory=tools/kapitan-mcp",
         "kapitan-mcp-server",
         "--project-root",
         "."
@@ -73,27 +89,43 @@ Add the server to `.cursor/mcp.json` in your Kapitan repo, and copy the Cursor r
   }
 }
 ```
-
-Copy `rules/cursor/kapitan.mdc` into your repo's `.cursor/rules/`.
+</details>
 
 ### Codex CLI
+
+Add the marketplace, then install the plugin:
+
+```
+codex plugin marketplace add Moep90/agent-toolkit-for-kapitan
+codex plugin install kapitan-core
+```
+
+Drop `rules/AGENTS.md` into your repo so Codex follows the Kapitan guardrails.
+
+<details>
+<summary>Manual config, without the marketplace</summary>
 
 Add the server to `~/.codex/config.toml`:
 
 ```toml
 [mcp_servers.kapitan]
 command = "uvx"
-args = ["--with", "kapitan", "--from", "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git#subdirectory=tools/kapitan-mcp", "kapitan-mcp-server", "--project-root", "/path/to/your/kapitan/repo"]
+args = ["--with", "kapitan", "--from", "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git@v0.0.5#subdirectory=tools/kapitan-mcp", "kapitan-mcp-server", "--project-root", "/path/to/your/kapitan/repo"]
 ```
-
-Drop `rules/AGENTS.md` into your repo so Codex follows the Kapitan guardrails.
+</details>
 
 ### Any other MCP client
 
 Point the client at the `kapitan-mcp-server` command over stdio with a `--project-root`
 argument. The [tool reference](docs/mcp-server.md) lists every tool and its response shape.
-For non-plugin clients, adopt the skills by copying the relevant `skills/<name>/` directories
-into wherever your client loads Agent Skills, and add a rules file from `rules/`.
+For non-plugin clients, adopt the skills with the installer (copies the packages into your
+client's skills directory), then add a rules file from `rules/`:
+
+```
+python3 scripts/install_skills.py --list                 # see skills and categories
+python3 scripts/install_skills.py <skills-dir>           # install all
+python3 scripts/install_skills.py <skills-dir> --category core
+```
 
 ## Tools
 

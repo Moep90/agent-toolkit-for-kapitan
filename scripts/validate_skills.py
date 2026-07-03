@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate skill packages: frontmatter, description length, and reference links.
+"""Validate skill packages: frontmatter, description length, reference links, and evals.
 
 Stdlib only. Exits non-zero on the first batch of problems, printing each. Run from the
 repo root or pass a skills directory.
@@ -7,6 +7,7 @@ repo root or pass a skills directory.
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -14,6 +15,10 @@ from pathlib import Path
 _FRONTMATTER = re.compile(r"^---\n(.*?)\n---\n", re.DOTALL)
 _LINK = re.compile(r"\]\((references/[^)]+)\)")
 _MAX_DESCRIPTION = 1024
+
+# Grouping metadata (item 4). Flat directories stay flat; the category is a frontmatter
+# field so docs and the installer can group skills without a directory reorg.
+_CATEGORIES = frozenset({"core", "generators", "authoring", "scaffolding"})
 
 
 def _parse_frontmatter(text: str) -> dict[str, str]:
@@ -50,11 +55,57 @@ def validate_skill(skill_dir: Path) -> list[str]:
     if not description:
         problems.append(f"{skill_dir.name}: frontmatter missing 'description'")
     elif len(description) > _MAX_DESCRIPTION:
-        problems.append(f"{skill_dir.name}: description {len(description)} > {_MAX_DESCRIPTION} chars")
+        problems.append(
+            f"{skill_dir.name}: description {len(description)} > {_MAX_DESCRIPTION} chars"
+        )
+
+    category = fields.get("category", "").strip()
+    if not category:
+        problems.append(f"{skill_dir.name}: frontmatter missing 'category'")
+    elif category not in _CATEGORIES:
+        allowed = ", ".join(sorted(_CATEGORIES))
+        problems.append(f"{skill_dir.name}: category '{category}' not in {{{allowed}}}")
 
     for rel in _LINK.findall(text):
         if not (skill_dir / rel).exists():
             problems.append(f"{skill_dir.name}: broken reference link {rel}")
+
+    problems.extend(validate_evals(skill_dir))
+
+    return problems
+
+
+def validate_evals(skill_dir: Path) -> list[str]:
+    """Check that the skill ships a well-formed evals/evals.json.
+
+    Structure only, no LLM: the harness that scores trigger rate needs the file to parse
+    and to name real cases, so a malformed or empty eval file fails the build early.
+    """
+    name = skill_dir.name
+    evals_file = skill_dir / "evals" / "evals.json"
+    if not evals_file.exists():
+        return [f"{name}: missing evals/evals.json"]
+
+    try:
+        data = json.loads(evals_file.read_text())
+    except json.JSONDecodeError as exc:
+        return [f"{name}: evals.json is not valid JSON ({exc})"]
+
+    problems: list[str] = []
+    if data.get("skill") != name:
+        problems.append(f"{name}: evals.json 'skill' must equal the directory name")
+
+    cases = data.get("cases")
+    if not isinstance(cases, list) or not cases:
+        problems.append(f"{name}: evals.json 'cases' must be a non-empty list")
+        return problems
+
+    for i, case in enumerate(cases):
+        if not isinstance(case, dict) or not str(case.get("prompt", "")).strip():
+            problems.append(f"{name}: evals.json case {i} missing a non-empty 'prompt'")
+        expect = case.get("expect") if isinstance(case, dict) else None
+        if not isinstance(expect, list) or not expect:
+            problems.append(f"{name}: evals.json case {i} missing a non-empty 'expect' list")
 
     return problems
 

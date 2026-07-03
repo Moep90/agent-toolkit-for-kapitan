@@ -1,5 +1,6 @@
 ---
 name: kapitan-writing-kadet
+category: authoring
 description: >-
   Use when writing or debugging a Kapitan kadet input: Python components that build
   manifests with BaseObj or BaseModel, read the inventory via inventory(), and return a

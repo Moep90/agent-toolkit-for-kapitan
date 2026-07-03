@@ -16,7 +16,14 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
+import structlog
+
 from kapitan_mcp.errors import KapitanCliError
+
+# Audit trail: every subprocess is logged (to stderr, never stdout) before it runs, so an
+# operator can see exactly which CLI invocations the agent drove. Only argv and cwd are
+# recorded, never the environment, so scrubbed credentials cannot leak into the log.
+log = structlog.get_logger()
 
 # Environment variables always passed through to the child.
 _ENV_ALLOWLIST = frozenset({"PATH", "HOME", "LANG", "LC_ALL", "LC_CTYPE", "TMPDIR", "TERM"})
@@ -69,6 +76,7 @@ def run(
 
     Raises :class:`KapitanCliError` on non-zero exit (carrying both streams) or timeout.
     """
+    log.info("cli_exec", argv=argv, cwd=str(cwd))
     env = scrub_env(os.environ, forward_prefixes=forward_prefixes)
     try:
         completed = subprocess.run(  # noqa: S603 - argv list, shell=False, scrubbed env

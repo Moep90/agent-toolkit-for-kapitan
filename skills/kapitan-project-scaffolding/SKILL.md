@@ -1,5 +1,6 @@
 ---
 name: kapitan-project-scaffolding
+category: scaffolding
 description: >-
   Use when creating a new Kapitan project or understanding an existing one's layout:
   inventory/targets and inventory/classes structure, the kapitan-reference layout,
