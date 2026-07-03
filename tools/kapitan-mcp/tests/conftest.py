@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import shutil
 import sys
 from pathlib import Path
 
@@ -22,6 +23,20 @@ if str(_SCRIPTS) not in sys.path:
 def mini_inventory() -> Path:
     """Path to the tiny, deliberately quirky Kapitan project used across unit tests."""
     return FIXTURES / "mini-inventory"
+
+
+@pytest.fixture(params=["reclass", "reclass-rs"])
+def backend_project(request: pytest.FixtureRequest, tmp_path: Path) -> tuple[str, Path]:
+    """A copy of mini-inventory wired to run under reclass or reclass-rs.
+
+    reclass-rs is reclass-format compatible, so the inventory content is reused unchanged;
+    only the ``.kapitan`` project file's ``inventory-backend`` setting differs.
+    """
+    backend: str = request.param
+    proj = tmp_path / backend
+    shutil.copytree(FIXTURES / "mini-inventory", proj)
+    (proj / ".kapitan").write_text(f"global:\n  inventory-backend: {backend}\n")
+    return backend, proj
 
 
 @pytest.fixture
