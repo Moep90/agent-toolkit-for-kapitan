@@ -11,10 +11,10 @@ of guessing, knowledge to reason about the merge model, and guardrails so they n
 
 ## Status
 
-Early development, but usable. The MCP server exposes ten read-first tools, tested against a
-real kapitan CLI at unit, integration, and MCP-protocol e2e levels. Seven agent skills, two
-Claude Code plugins with a marketplace manifest, and rules files for the common clients are
-in place.
+Early development, but usable. The MCP server exposes a dozen read-first tools, tested
+against a real kapitan CLI at unit, integration, and MCP-protocol e2e levels. Agent skills
+for the inventory model, generators, input types, and secrets; two plugins with per-client
+marketplace manifests; and rules files for the common clients are in place.
 
 ## Layout
 
@@ -30,19 +30,13 @@ in place.
 
 ## Install
 
-The config below bundles the `kapitan` CLI into the server's isolated environment with
-`--with kapitan`, so it works out of the box. If your project pins kapitan or uses the
-`./kapitan` Docker wrapper, drop `--with kapitan` and run the server where that CLI lives.
+The configs below bundle the `kapitan` CLI with `--with kapitan`, so the server works out of
+the box; drop it if your project pins kapitan or uses the `./kapitan` wrapper. The package is
+not on PyPI yet, so they run it from the repo with `uvx --from git+...` (see
+[`server.json`](server.json) for the registry manifest).
 
-The package is not on PyPI yet, so the config runs the server straight from the repo with
-`uvx --from git+...`. Once it is published, that `--from` argument collapses to a plain
-`uvx --with kapitan kapitan-mcp-server`. The server and its packaging are described for MCP
-clients in [`server.json`](server.json) (the Model Context Protocol registry manifest).
-
-**Pin a version.** Every push to `main` cuts a `vX.Y.Z` tag ([releases]). The examples below
-pin the git ref to `@v0.1.0` for reproducible behaviour; bump it to the newest tag when you
-update, or drop the `@...` to track `main`. After PyPI publish, pin the released version
-instead (`kapitan-mcp-server==X.Y.Z`).
+**Pin a version.** Every push to `main` cuts a `vX.Y.Z` tag ([releases]); the examples pin
+`@v0.1.0`. Bump it when you update, or drop the `@...` to track `main`.
 
 [releases]: https://github.com/Moep90/agent-toolkit-for-kapitan/releases
 
@@ -56,8 +50,8 @@ Install the plugin from this repo acting as a marketplace:
 ```
 
 `kapitan-core` wires up the MCP server and the core skills; add `kapitan-generators` for the
-generator, kadet, and scaffolding skills. Then open a Kapitan repo and ask a question like
-"what image does target prod deploy?" and the agent answers through the tools.
+generator, input, kadet, and scaffolding skills. Then open a Kapitan repo and ask a question
+like "what image does target prod deploy?" and the agent answers through the tools.
 
 ### Cursor
 
@@ -136,6 +130,12 @@ Read-only inventory: `kapitan_project_info`, `kapitan_list_targets`, `kapitan_li
 Compile loop: `kapitan_compile` (writes into `compiled/` only when `apply=true`),
 `kapitan_compile_diff` (compiles to a temp dir and diffs against the committed `compiled/`
 without touching it), and `kapitan_lint`.
+
+Generators: `kapitan_generator_trace` (flags a components/generators block that no compile
+entry consumes, the silent no-op) and `kapitan_generator_schema` (the keys other blocks of
+the family already use, so a mistyped field stands out).
+
+Full reference with arguments and response shapes: [docs/mcp-server.md](docs/mcp-server.md).
 
 ## Development
 
