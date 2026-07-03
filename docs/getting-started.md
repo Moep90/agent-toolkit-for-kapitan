@@ -6,15 +6,17 @@ compiles with the `kapitan` CLI alone, no helm/jsonnet/terraform binaries.
 
 ## Install
 
-Install the server and skills for your client following [install.md](install.md). For Claude
-Code that is two commands:
+Install the plugin for your client following [install.md](install.md). For Claude Code that
+is two commands:
 
 ```
 /plugin marketplace add https://github.com/Moep90/agent-toolkit-for-kapitan.git
 /plugin install kapitan-core
 ```
 
-`kapitan-core` wires up the MCP server (via `uvx kapitan-mcp-server`) and the core skills.
+`kapitan-core` installs the core skills and configures the MCP server (optional, via
+`uvx kapitan-mcp-server`; the skills work without it). For guardrails with no plugin at all,
+drop in a [rules file](../rules/) instead.
 
 ## Run against the demo
 

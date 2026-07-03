@@ -3,22 +3,23 @@
 How to run `kapitan-mcp-server` and adopt the skills, per client. This is the canonical
 install reference; the README links here.
 
-## Choose your layer
+## Choose your setup
 
-Three independent layers. Pick what you need; none requires the others.
+Two ways to equip an agent:
 
-| Layer | What you get | Needs | How |
-|---|---|---|---|
-| **Rules** | Guardrails any agent follows via the plain `kapitan` CLI | nothing | `curl` a file from [`rules/`](../rules/), shown per client below |
-| **Skills** | Kapitan knowledge and workflows | nothing to run | included in the plugin |
-| **MCP server** | Structured, sandboxed tools (`kapitan_inventory_target`, `kapitan_compile_diff`, …) | `uv` (+ `kapitan`) | a plugin, or manual config |
+| Setup | The agent gets | Needs |
+|---|---|---|
+| **Rules file** | Guardrails it follows using the plain `kapitan` CLI | nothing — `curl` one file |
+| **Plugin** | The Kapitan skills, plus the MCP server's structured tools | `uv` (+ `kapitan`) for the server |
 
-The per-client sections below install the **plugin**, which bundles the skills and the MCP
-server. For guardrails alone, use the `curl` in your client's section.
+The MCP server is optional: the plugin's skills load and work on their own, and the server
+adds the resolved-inventory tools when `uv` is present. Per-client install is below. Want
+only guardrails? Use the `curl` in your client's section. Want only the server, no skills?
+Use the manual config block.
 
-## Prerequisites (MCP server layer)
+## Prerequisites (MCP server)
 
-Only the MCP server needs these; the rules and skills layers need neither.
+Only the MCP server needs these; the rules file and the skills do not.
 
 - `uv` (to run the server).
 - A `kapitan` CLI on PATH, or the project's `./kapitan` Docker wrapper. The configs below
@@ -40,7 +41,8 @@ Install the plugin from this repo acting as a marketplace (run the two commands 
 /plugin install kapitan-core
 ```
 
-`kapitan-core` wires up the MCP server and the core skills; add `kapitan-generators` for the
+`kapitan-core` installs the core skills and configures the MCP server (optional — the skills
+work without it); add `kapitan-generators` for the
 generator, input, kadet, and scaffolding skills. Then open a Kapitan repo and ask a question
 like "what image does target prod deploy?" and the agent answers through the tools.
 
