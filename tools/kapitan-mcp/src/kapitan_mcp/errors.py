@@ -54,6 +54,11 @@ class InvalidInventoryError(KapitanMcpError):
     remediation = "The YAML failed to parse. Fix the syntax in the reported file, then retry."
 
 
+class UnknownTargetError(KapitanMcpError):
+    code = "UNKNOWN_TARGET"
+    remediation = "No target file by that name. Call kapitan_list_targets to see valid names."
+
+
 class KapitanCliError(KapitanMcpError):
     """A subprocess invocation of the kapitan CLI exited non-zero."""
 
