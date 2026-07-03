@@ -37,6 +37,38 @@ def test_create_server__tools_have_descriptions(mini_inventory: Path) -> None:
         assert tool.description, f"{tool.name} has no description for the agent"
 
 
+def test_create_server__read_only_tools_annotated_read_only(mini_inventory: Path) -> None:
+    server = create_server(mini_inventory)
+    tools = {t.name: t for t in asyncio.run(server.list_tools())}
+
+    read_only = {
+        "kapitan_project_info",
+        "kapitan_list_targets",
+        "kapitan_list_classes",
+        "kapitan_inventory_target",
+        "kapitan_class_hierarchy",
+        "kapitan_search_inventory",
+        "kapitan_refs_list",
+        "kapitan_compile_diff",
+        "kapitan_generator_trace",
+        "kapitan_generator_schema",
+        "kapitan_lint",
+    }
+    for name in read_only:
+        ann = tools[name].annotations
+        assert ann is not None and ann.readOnlyHint is True, f"{name} not marked read-only"
+
+
+def test_create_server__compile_annotated_destructive(mini_inventory: Path) -> None:
+    server = create_server(mini_inventory)
+    tools = {t.name: t for t in asyncio.run(server.list_tools())}
+
+    ann = tools["kapitan_compile"].annotations
+    assert ann is not None
+    assert ann.readOnlyHint is False
+    assert ann.destructiveHint is True
+
+
 def test_guard__success__returns_model_dump() -> None:
     def ok() -> TargetList:
         return TargetList(targets=[])
