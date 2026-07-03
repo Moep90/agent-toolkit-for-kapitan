@@ -16,6 +16,10 @@ many projects, not one. This is a level above `kapitan-writing-kadet` (a one-off
 component): a generator reads a well-known parameters key, iterates every entry under it,
 and controls its own output-file layout so consumers just fetch it and fill in data.
 
+The `kgenlib` SDK surface (BaseStore, BaseObj/BaseModel, registration decorators, mutations)
+is in [references/kgenlib-api.md](references/kgenlib-api.md); read it before building a
+generator against `kgenlib`.
+
 ## The entrypoint contract
 
 A generator module exposes `main(input_params)` and reads the resolved inventory:

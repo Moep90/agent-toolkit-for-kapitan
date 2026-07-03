@@ -134,3 +134,16 @@ class TargetTrace(BaseModel):
 class GeneratorTrace(Response):
     targets: list[TargetTrace]
     orphans: list[str] = []  # "<target>: <block path>" for every unwired block
+
+
+class SchemaKey(BaseModel):
+    key: str
+    count: int  # distinct blocks that use this key
+    examples: list[str] = []  # block names using it (capped)
+
+
+class GeneratorSchema(Response):
+    key: str  # inspected top-level block, e.g. "components"
+    blocks_examined: int
+    keys: list[SchemaKey]
+    rare_keys: list[str] = []  # used by exactly one block: likely typo or new

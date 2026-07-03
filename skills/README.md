@@ -9,6 +9,8 @@ example prompts and expected points.
 | `kapitan-inventory-model` | Targets, classes, merge order, interpolation-after-merge, backends |
 | `kapitan-kubernetes-generator` | The `components:` schema for Kubernetes workloads |
 | `kapitan-terraform-generator` | The Terraform generator layout and inventory schema |
+| `kapitan-helm-input` | Rendering Helm charts via the native `input_type: helm` |
+| `kapitan-omegaconf-resolvers` | Reusable inventory blocks via custom omegaconf resolvers |
 | `kapitan-authoring-generator` | Writing a reusable generator: the kadet ABI and output-file layout |
 | `kapitan-generator-wiring` | Wiring a block to a target and diagnosing the silent no-op |
 | `kapitan-writing-kadet` | Kadet Python components and how to test them |
