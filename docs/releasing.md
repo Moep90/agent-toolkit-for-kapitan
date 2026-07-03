@@ -1,14 +1,29 @@
 # Releasing
 
 Releases are automatic. Every push to `main` runs `.github/workflows/release.yml`, which
-computes the next version from the Conventional Commit messages since the last tag, creates
-the tag, and publishes a GitHub release with generated notes. Versioning is SemVer; the
-package version is derived from the git tag by hatch-vcs, so nothing is committed back to the
-protected `main` branch.
+computes the next version from the Conventional Commit messages since the last tag, stamps
+that version into the plugin manifests and README pins, commits the stamp back to `main`,
+tags it, and publishes a GitHub release with generated notes. Versioning is SemVer; the
+Python package version is derived from the git tag by hatch-vcs.
 
 A release is cut only when the commits since the last tag warrant one: `fix:` bumps the
 patch, `feat:` the minor, and `feat!:` or a `BREAKING CHANGE:` footer the major. Pushes that
 are only `docs:`, `chore:`, or `ci:` do not cut a release.
+
+## The stamp commit and `RELEASE_TOKEN`
+
+The plugin manifests (`.claude-plugin/`, `.cursor-plugin/`, `.agents/plugins/`, and each
+`plugins/*/…-plugin/plugin.json`) and the README install pins carry a literal version, so
+clients can detect updates. The version lives once, as `VERSION` in
+[`scripts/sync_plugins.py`](../scripts/sync_plugins.py); the release workflow rewrites that
+line, regenerates the manifests, and commits the result as `chore(release): vX.Y.Z [skip ci]`
+before tagging.
+
+Because `main` is protected, the default `GITHUB_TOKEN` cannot push that commit. Create a
+personal access token from a repo admin (fine-grained, `contents: read and write` on this
+repo) and store it as the `RELEASE_TOKEN` repository secret
+(`gh secret set RELEASE_TOKEN`). Without it the workflow skips the stamp and tags the merge
+commit as-is, so releases still succeed; the manifests just keep their previous version.
 
 ## Publishing to PyPI and the MCP registry
 

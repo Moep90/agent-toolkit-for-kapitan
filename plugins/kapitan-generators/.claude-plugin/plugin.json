@@ -1,6 +1,6 @@
 {
   "name": "kapitan-generators",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Skills for the kapicorp Kubernetes and Terraform generators, kadet authoring, and project scaffolding.",
   "author": {
     "name": "kapicorp"

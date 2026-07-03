@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Agent plugins that make AI coding agents good at Kapitan projects.",
-    "version": "0.0.0"
+    "version": "0.1.0"
   },
   "plugins": [
     {
@@ -25,7 +25,7 @@
         "config-management",
         "gitops"
       ],
-      "version": "0.0.0"
+      "version": "0.1.0"
     },
     {
       "name": "kapitan-generators",
@@ -42,7 +42,7 @@
         "manifests",
         "config-management"
       ],
-      "version": "0.0.0"
+      "version": "0.1.0"
     }
   ]
 }

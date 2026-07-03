@@ -30,6 +30,10 @@ ROOT = Path(__file__).resolve().parent.parent
 SKILLS = ROOT / "skills"
 PLUGINS_DIR = ROOT / "plugins"
 
+# Single source of the release version stamped into every manifest. The release workflow
+# rewrites this line (VERSION = "...") on each release; do not edit it by hand.
+VERSION = "0.1.0"
+
 REPO_URL = "https://github.com/Moep90/agent-toolkit-for-kapitan"
 MARKET_NAME = "agent-toolkit-for-kapitan"
 MARKET_DESCRIPTION = "Agent plugins that make AI coding agents good at Kapitan projects."
@@ -49,7 +53,7 @@ PLUGINS: dict[str, dict[str, object]] = {
             "Kapitan MCP server plus core skills: the inventory model, secret refs, and "
             "compile debugging."
         ),
-        "version": "0.0.0",
+        "version": VERSION,
         "keywords": [
             "kapitan",
             "inventory",
@@ -75,7 +79,7 @@ PLUGINS: dict[str, dict[str, object]] = {
             "Skills for the kapicorp Kubernetes and Terraform generators, kadet authoring, "
             "and project scaffolding."
         ),
-        "version": "0.0.0",
+        "version": VERSION,
         "keywords": [
             "kapitan",
             "kadet",
@@ -101,7 +105,7 @@ def _claude_marketplace() -> dict[str, object]:
     return {
         "name": MARKET_NAME,
         "owner": {"name": OWNER},
-        "metadata": {"description": MARKET_DESCRIPTION, "version": "0.0.0"},
+        "metadata": {"description": MARKET_DESCRIPTION, "version": VERSION},
         "plugins": [
             {
                 "name": name,
