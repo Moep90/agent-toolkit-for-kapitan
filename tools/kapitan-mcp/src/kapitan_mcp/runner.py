@@ -62,6 +62,9 @@ def scrub_env(
     for key, value in source.items():
         if key in _ENV_ALLOWLIST or key.startswith(forward_prefixes):
             scrubbed[key] = value
+    # Keep our subprocesses read-only: kapitan imports project python (e.g. omegaconf
+    # resolvers.py), which otherwise writes .pyc files into the user's inventory tree.
+    scrubbed["PYTHONDONTWRITEBYTECODE"] = "1"
     return scrubbed
 
 
