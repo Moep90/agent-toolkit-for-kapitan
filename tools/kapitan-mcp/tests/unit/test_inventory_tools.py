@@ -129,6 +129,19 @@ def test_class_hierarchy__corrupt_class_yaml__raises_typed_actionable_error(
     assert "common.yml" in str(excinfo.value)
 
 
+def test_class_hierarchy__unknown_target__raises_typed_error_without_leaking_path(
+    mini_inventory: Path,
+) -> None:
+    from kapitan_mcp.errors import UnknownTargetError
+
+    with pytest.raises(UnknownTargetError) as excinfo:
+        class_hierarchy(mini_inventory, "nope")
+
+    assert excinfo.value.remediation  # actionable, not a bare FileNotFoundError
+    assert "nope" in str(excinfo.value)
+    assert str(mini_inventory) not in str(excinfo.value)  # no absolute sandbox path leak
+
+
 def test_class_hierarchy__reports_ordered_includes(mini_inventory: Path) -> None:
     result = class_hierarchy(mini_inventory, "prod")
 

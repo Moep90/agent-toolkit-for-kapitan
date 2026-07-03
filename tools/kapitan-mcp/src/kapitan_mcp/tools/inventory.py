@@ -16,7 +16,12 @@ from typing import Any
 import yaml
 
 from kapitan_mcp import runner
-from kapitan_mcp.errors import InvalidInventoryError, KapitanCliError, enrich
+from kapitan_mcp.errors import (
+    InvalidInventoryError,
+    KapitanCliError,
+    UnknownTargetError,
+    enrich,
+)
 from kapitan_mcp.models import (
     ClassEntry,
     ClassHierarchy,
@@ -194,6 +199,8 @@ def class_hierarchy(root: Path, target: str) -> ClassHierarchy:
     """
     root = root.resolve()
     target_file = root / _TARGETS_DIR / f"{target}.yml"
+    if not target_file.is_file():
+        raise UnknownTargetError(f"No target {target!r} in the inventory.")
     nodes: list[ClassNode] = []
     visited: set[str] = set()
 
