@@ -13,21 +13,9 @@ Three independent layers. Pick what you need; none requires the others.
 | **Skills** | Kapitan knowledge and workflows, no server | nothing to run | `install_skills.py`, or a plugin |
 | **MCP server** | Structured, sandboxed tools (`kapitan_inventory_target`, `kapitan_compile_diff`, …) | `uv` (+ `kapitan`) | a plugin, or manual config |
 
-### What each piece actually is
-
-- **Skills** are markdown files the agent loads into its context (the inventory merge model,
-  secret-ref rules, generator know-how). They change how the agent *reasons*. Nothing runs;
-  they cost only context tokens. On Claude Code, Codex, and Cursor the plugin installs them;
-  other clients use [`install_skills.py`](#skills-without-a-plugin).
-- **The MCP server** is a program the agent calls as tools (`kapitan_inventory_target`,
-  `kapitan_compile_diff`, …). It *executes* the real `kapitan` CLI in a sandbox and returns
-  structured data, so the agent sees resolved values instead of guessing. A process; needs `uv`.
-- **Rules** are a one-file guardrail (`AGENTS.md` / `CLAUDE.md` / `.mdc`) dropped into your
-  repo — no editing `compiled/`, no revealing secrets. Any agent, zero setup.
-
-A **plugin** (`kapitan-core`) is just a bundle: one command installs the skills **and** wires
-up the MCP server. Want only one? Skills → [`install_skills.py`](#skills-without-a-plugin);
-server → the "Manual config" block in your client's section; guardrails → the `curl`.
+The per-client sections below install the **plugin**, which bundles the skills and the MCP
+server. For skills alone, see [Skills without a plugin](#skills-without-a-plugin); for
+guardrails alone, use the `curl` in your client's section.
 
 ## Prerequisites (MCP server layer)
 
