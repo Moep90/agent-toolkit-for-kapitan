@@ -18,6 +18,7 @@ from kapitan_mcp.tools.lint import lint
 pytestmark = pytest.mark.integration
 
 FIXTURE = Path(__file__).parent.parent / "fixtures" / "mini-inventory"
+OMEGA = Path(__file__).parent.parent / "fixtures" / "omega-inventory"
 
 
 @pytest.fixture(autouse=True)
@@ -90,3 +91,21 @@ def test_lint__clean_project__passes() -> None:
 
     assert result.ok is True
     assert "orphan" in result.output.lower()
+
+
+def test_project_info__omegaconf_backend() -> None:
+    info = project_info(OMEGA)
+    assert info.backend == "omegaconf"
+
+
+def test_inventory_target__omegaconf__resolves_dot_interpolation() -> None:
+    result = inventory_target(OMEGA, "dev")
+    assert result.parameters is not None
+    assert result.parameters["mysql"]["image"] == "mysql:8.0"
+    assert result.parameters["namespace"] == "dev"
+    assert result.parameters["env_label"] == "DEV"
+
+
+def test_inventory_target__omegaconf__prod_override_wins() -> None:
+    result = inventory_target(OMEGA, "prod")
+    assert result.parameters["mysql"]["image"] == "mysql:8.0-prod"
