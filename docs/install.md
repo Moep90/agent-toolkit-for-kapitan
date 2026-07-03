@@ -11,17 +11,10 @@ install reference; the README links here.
   out of the box; drop `--with kapitan` if your project pins its own kapitan or uses the
   wrapper.
 
-## Version pinning
-
-The package is not on PyPI yet, so the configs run the server from the repo with
-`uvx --from git+...`. Every push to `main` cuts a `vX.Y.Z` tag ([releases]); the examples
-pin `@v0.1.0` for reproducible behaviour. Bump it when you update, or drop the `@...` to
-track `main`. After a PyPI publish, the `--from` argument collapses to
-`uvx --with kapitan kapitan-mcp-server` and you pin `kapitan-mcp-server==X.Y.Z` instead. The
-server and its packaging are described for MCP clients in [`server.json`](../server.json)
-(the Model Context Protocol registry manifest).
-
-[releases]: https://github.com/Moep90/agent-toolkit-for-kapitan/releases
+The server runs from this repo on `main`; the package is not on PyPI yet, so the configs use
+`uvx --from git+...`. There are no release tags to pin. The server and its packaging are
+described for MCP clients in [`server.json`](../server.json) (the Model Context Protocol
+registry manifest).
 
 ## Claude Code
 
@@ -69,7 +62,7 @@ Add the server to `.cursor/mcp.json` in your Kapitan repo:
         "--with",
         "kapitan",
         "--from",
-        "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git@v0.1.0#subdirectory=tools/kapitan-mcp",
+        "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git#subdirectory=tools/kapitan-mcp",
         "kapitan-mcp-server",
         "--project-root",
         "."
@@ -104,7 +97,7 @@ Add the server to `~/.codex/config.toml`:
 ```toml
 [mcp_servers.kapitan]
 command = "uvx"
-args = ["--with", "kapitan", "--from", "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git@v0.1.0#subdirectory=tools/kapitan-mcp", "kapitan-mcp-server", "--project-root", "/path/to/your/kapitan/repo"]
+args = ["--with", "kapitan", "--from", "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git#subdirectory=tools/kapitan-mcp", "kapitan-mcp-server", "--project-root", "/path/to/your/kapitan/repo"]
 ```
 </details>
 
@@ -126,6 +119,37 @@ Most agents read a generic `AGENTS.md`; drop the guardrails in with:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Moep90/agent-toolkit-for-kapitan/main/rules/AGENTS.md >> AGENTS.md
 ```
+
+## Updating
+
+Everything tracks `main`; there are no versions to bump.
+
+**Claude Code** — refresh the marketplace, then update the plugins:
+
+```
+/plugin marketplace update agent-toolkit-for-kapitan
+/plugin update kapitan-core
+/plugin update kapitan-generators
+```
+
+**Codex** — refresh and update:
+
+```
+codex plugin marketplace update
+codex plugin update kapitan-core
+```
+
+**MCP server (any client)** — the server tracks `main`, but `uvx` caches the git build and
+does not refetch on its own. After an upstream change, force a rebuild:
+
+```bash
+uvx --refresh --from git+https://github.com/Moep90/agent-toolkit-for-kapitan.git#subdirectory=tools/kapitan-mcp kapitan-mcp-server
+```
+
+or clear the uv cache with `rm -rf ~/.cache/uv`.
+
+**Rules files** — re-run the `curl ... >> AGENTS.md` (or the `CLAUDE.md` / `.mdc` variant) to
+re-pull the latest guardrails.
 
 ## Try it against the demo
 
