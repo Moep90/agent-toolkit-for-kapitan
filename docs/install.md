@@ -13,10 +13,21 @@ Three independent layers. Pick what you need; none requires the others.
 | **Skills** | Kapitan knowledge and workflows, no server | nothing to run | `install_skills.py`, or a plugin |
 | **MCP server** | Structured, sandboxed tools (`kapitan_inventory_target`, `kapitan_compile_diff`, …) | `uv` (+ `kapitan`) | a plugin, or manual config |
 
-The per-client sections below install the **plugin**, which bundles the skills and the MCP
-server. Want only guardrails? Skip to the `curl` in your client's section — no `uv`, no
-server needed. Want skills without the server? See
-[Any other MCP client](#any-other-mcp-client).
+### What each piece actually is
+
+- **Skills** are markdown files the agent loads into its context (the inventory merge model,
+  secret-ref rules, generator know-how). They change how the agent *reasons*. Nothing runs;
+  they cost only context tokens. On Claude Code, Codex, and Cursor the plugin installs them;
+  other clients use [`install_skills.py`](#skills-without-a-plugin).
+- **The MCP server** is a program the agent calls as tools (`kapitan_inventory_target`,
+  `kapitan_compile_diff`, …). It *executes* the real `kapitan` CLI in a sandbox and returns
+  structured data, so the agent sees resolved values instead of guessing. A process; needs `uv`.
+- **Rules** are a one-file guardrail (`AGENTS.md` / `CLAUDE.md` / `.mdc`) dropped into your
+  repo — no editing `compiled/`, no revealing secrets. Any agent, zero setup.
+
+A **plugin** (`kapitan-core`) is just a bundle: one command installs the skills **and** wires
+up the MCP server. Want only one? Skills → [`install_skills.py`](#skills-without-a-plugin);
+server → the "Manual config" block in your client's section; guardrails → the `curl`.
 
 ## Prerequisites (MCP server layer)
 
@@ -118,12 +129,10 @@ args = ["--with", "kapitan", "--from", "git+https://github.com/Moep90/agent-tool
 ```
 </details>
 
-## Any other MCP client
+## Skills without a plugin
 
-Point the client at the `kapitan-mcp-server` command over stdio with a `--project-root`
-argument; [mcp-server.md](mcp-server.md) lists every tool and its response shape. For
-non-plugin clients, adopt the skills with the installer, then add a rules file from
-[`rules/`](../rules/):
+The skills are plain markdown — no server involved. Install them into any client that reads
+Agent Skills:
 
 ```
 python3 scripts/install_skills.py --list                 # see skills and categories
@@ -131,7 +140,11 @@ python3 scripts/install_skills.py <skills-dir>           # install all
 python3 scripts/install_skills.py <skills-dir> --category core
 ```
 
-Most agents read a generic `AGENTS.md`; drop the guardrails in with:
+## Any other MCP client
+
+Point the client at the `kapitan-mcp-server` command over stdio with a `--project-root`
+argument; [mcp-server.md](mcp-server.md) lists every tool and its response shape. Add
+guardrails with a rules file — most agents read a generic `AGENTS.md`:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Moep90/agent-toolkit-for-kapitan/main/rules/AGENTS.md >> AGENTS.md
