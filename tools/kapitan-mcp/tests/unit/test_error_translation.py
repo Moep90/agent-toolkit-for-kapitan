@@ -36,3 +36,31 @@ def test_enrich__upgrades_error_code_and_remediation_in_place() -> None:
 
     assert err.code == "CLASS_NOT_FOUND"
     assert err.remediation
+
+
+_CROSS_TARGET_STDERR = (
+    "example: could not render due to error Class t not found\n"
+    "gitlab-runner-test: could not render due to error dictionary changed size during iteration\n"
+)
+
+
+def test_enrich__other_target_failed__flags_the_real_culprit() -> None:
+    err = KapitanCliError("inventory failed", exit_code=1, stderr=_CROSS_TARGET_STDERR)
+
+    enrich(err, target="airgap-bundle")
+
+    assert err.code == "OTHER_TARGET_FAILED"
+    assert "example" in err.remediation
+    assert "gitlab-runner-test" in err.remediation
+
+
+def test_enrich__requested_target_is_the_broken_one__classifies_normally() -> None:
+    err = KapitanCliError(
+        "inventory failed",
+        exit_code=1,
+        stderr="example: could not render due to error Class t not found under yaml_fs://",
+    )
+
+    enrich(err, target="example")
+
+    assert err.code == "CLASS_NOT_FOUND"
