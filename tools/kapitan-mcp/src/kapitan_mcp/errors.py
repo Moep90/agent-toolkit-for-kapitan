@@ -6,6 +6,8 @@ model can recover instead of seeing a raw stack trace.
 
 from __future__ import annotations
 
+import re
+
 
 class KapitanMcpError(Exception):
     """Base class for all errors this server raises deliberately."""
@@ -109,7 +111,31 @@ def classify_kapitan_error(stderr: str) -> tuple[str, str]:
     return "KAPITAN_CLI_ERROR", "The kapitan CLI failed. Read the stderr for the cause."
 
 
-def enrich(err: KapitanCliError) -> KapitanCliError:
-    """Upgrade a raw CLI error's code and remediation from its stderr, in place."""
+# kapitan reports a per-target render failure as "<target>: could not render due to error ...".
+_RENDER_FAILURE_RE = re.compile(r"^(\S+): could not render due to error", re.MULTILINE)
+
+
+def failed_render_targets(stderr: str) -> set[str]:
+    """Target names kapitan reported as failing to render, parsed from its stderr."""
+    return set(_RENDER_FAILURE_RE.findall(stderr))
+
+
+def enrich(err: KapitanCliError, *, target: str | None = None) -> KapitanCliError:
+    """Upgrade a raw CLI error's code and remediation from its stderr, in place.
+
+    When ``target`` is given and the failures come from *other* targets (the omegaconf
+    backend renders the whole inventory, so one broken target fails the command for all),
+    flag that instead of blaming the requested target.
+    """
+    culprits = failed_render_targets(err.stderr)
+    if target is not None and culprits and target not in culprits:
+        others = ", ".join(sorted(culprits))
+        err.code = "OTHER_TARGET_FAILED"
+        err.remediation = (
+            f"Target {target!r} was requested, but the inventory backend renders every "
+            f"target and these other target(s) failed: {others}. Fix those targets (or "
+            f"remove them) so the whole inventory parses, then retry."
+        )
+        return err
     err.code, err.remediation = classify_kapitan_error(err.stderr)
     return err

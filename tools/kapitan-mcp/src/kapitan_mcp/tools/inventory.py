@@ -162,7 +162,7 @@ def inventory_target(
             cwd=root,
         )
     except KapitanCliError as exc:
-        raise enrich(exc) from exc
+        raise enrich(exc, target=target) from exc
     data = yaml.safe_load(result.stdout) or {}
     parameters: dict[str, Any] = data.get("parameters", data)
 
