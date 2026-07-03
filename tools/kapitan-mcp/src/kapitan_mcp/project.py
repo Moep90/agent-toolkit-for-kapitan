@@ -7,12 +7,27 @@ Every filesystem path that originates from the model must pass through
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 from kapitan_mcp.errors import PathOutsideProjectError, ProjectNotFoundError
 
 # Files/dirs that mark the root of a Kapitan project.
 _ROOT_MARKERS = (".kapitan", "inventory")
+
+
+def resolve_kapitan(root: Path) -> str:
+    """Pick the kapitan executable for ``root``, preferring the project's own toolchain.
+
+    Order: the in-project ``.venv/bin/kapitan``, then a ``./kapitan`` wrapper, then bare
+    ``kapitan`` from PATH. The first two must exist and be executable. Using the project's
+    pinned kapitan avoids version drift against a bundled or global CLI. ``root`` is fixed
+    at server start, so this never runs a binary the model chose.
+    """
+    for candidate in (root / ".venv" / "bin" / "kapitan", root / "kapitan"):
+        if candidate.is_file() and os.access(candidate, os.X_OK):
+            return str(candidate.resolve())
+    return "kapitan"
 
 
 def find_project_root(start: Path) -> Path:

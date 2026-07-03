@@ -21,6 +21,7 @@ from kapitan_mcp.models import (
     CompileResult,
     CompileTargetResult,
 )
+from kapitan_mcp.project import resolve_kapitan
 from kapitan_mcp.tools.inventory import _read_backend
 
 RunFn = Callable[..., runner.CommandResult]
@@ -39,7 +40,7 @@ def _run_kapitan(run: RunFn, argv: list[str], cwd: Path) -> runner.CommandResult
 
 def _compile_argv(root: Path, targets: list[str], *, fetch: bool, output_path: Path) -> list[str]:
     argv = [
-        "kapitan",
+        resolve_kapitan(root),
         "compile",
         "--targets",
         *targets,
