@@ -15,8 +15,8 @@ is two commands:
 ```
 
 `kapitan-core` installs the core skills and configures the MCP server (optional, via
-`uvx kapitan-mcp-server`; the skills work without it). For guardrails with no plugin at all,
-drop in a [rules file](../rules/) instead.
+`uvx kapitan-mcp-server`; the skills work without it). For guardrails without a plugin, drop
+in a [rules file](../rules/) instead.
 
 ## Run against the demo
 

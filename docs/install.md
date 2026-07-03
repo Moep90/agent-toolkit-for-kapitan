@@ -9,7 +9,7 @@ Two ways to equip an agent:
 
 | Setup | The agent gets | Needs |
 |---|---|---|
-| **Rules file** | Guardrails it follows using the plain `kapitan` CLI | nothing — `curl` one file |
+| **Rules file** | Guardrails it follows using the plain `kapitan` CLI | nothing, `curl` one file |
 | **Plugin** | The Kapitan skills, plus the MCP server's structured tools | `uv` (+ `kapitan`) for the server |
 
 The MCP server is optional: the plugin's skills load and work on their own, and the server
@@ -41,7 +41,7 @@ Install the plugin from this repo acting as a marketplace (run the two commands 
 /plugin install kapitan-core
 ```
 
-`kapitan-core` installs the core skills and configures the MCP server (optional — the skills
+`kapitan-core` installs the core skills and configures the MCP server (optional: the skills
 work without it); add `kapitan-generators` for the
 generator, input, kadet, and scaffolding skills. Then open a Kapitan repo and ask a question
 like "what image does target prod deploy?" and the agent answers through the tools.
@@ -122,7 +122,7 @@ args = ["--with", "kapitan", "--from", "git+https://github.com/Moep90/agent-tool
 
 Point the client at the `kapitan-mcp-server` command over stdio with a `--project-root`
 argument; [mcp-server.md](mcp-server.md) lists every tool and its response shape. Add
-guardrails with a rules file — most agents read a generic `AGENTS.md`:
+guardrails with a rules file. Most agents read a generic `AGENTS.md`:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Moep90/agent-toolkit-for-kapitan/main/rules/AGENTS.md >> AGENTS.md
@@ -132,7 +132,7 @@ curl -fsSL https://raw.githubusercontent.com/Moep90/agent-toolkit-for-kapitan/ma
 
 Everything tracks `main`; there are no versions to bump.
 
-**Claude Code** — third-party marketplaces do not auto-update by default. Enable it once in
+**Claude Code.** Third-party marketplaces do not auto-update by default. Enable it once in
 `/plugin` → Marketplaces → `agent-toolkit-for-kapitan` → Enable auto-update, or in
 settings.json:
 
@@ -147,8 +147,8 @@ settings.json:
 }
 ```
 
-To update by hand, refresh the marketplace then update each plugin — the
-`@agent-toolkit-for-kapitan` suffix is required (`/plugin update kapitan-core` alone no-ops):
+To update by hand, refresh the marketplace then update each plugin. The
+`@agent-toolkit-for-kapitan` suffix is required; `/plugin update kapitan-core` alone no-ops:
 
 ```
 /plugin marketplace update agent-toolkit-for-kapitan
@@ -156,14 +156,14 @@ To update by hand, refresh the marketplace then update each plugin — the
 /plugin update kapitan-generators@agent-toolkit-for-kapitan
 ```
 
-**Codex** — refresh and update:
+**Codex.** Refresh and update:
 
 ```
 codex plugin marketplace update
 codex plugin update kapitan-core
 ```
 
-**MCP server (any client)** — the server tracks `main`, but `uvx` caches the git build and
+**MCP server (any client).** The server tracks `main`, but `uvx` caches the git build and
 does not refetch on its own. After an upstream change, force a rebuild:
 
 ```bash
@@ -172,7 +172,7 @@ uvx --refresh --from git+https://github.com/Moep90/agent-toolkit-for-kapitan.git
 
 or clear the uv cache with `rm -rf ~/.cache/uv`.
 
-**Rules files** — re-run the `curl ... >> AGENTS.md` (or the `CLAUDE.md` / `.mdc` variant) to
+**Rules files.** Re-run the `curl ... >> AGENTS.md` (or the `CLAUDE.md` / `.mdc` variant) to
 re-pull the latest guardrails.
 
 ## Try it against the demo
