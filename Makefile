@@ -12,12 +12,12 @@ sync:
 	$(UV) sync
 
 lint:
-	$(UV) run ruff check .
-	$(UV) run ruff format --check .
+	$(UV) run ruff check . ../../scripts --config pyproject.toml
+	$(UV) run ruff format --check . ../../scripts --config pyproject.toml
 
 format:
-	$(UV) run ruff format .
-	$(UV) run ruff check --fix .
+	$(UV) run ruff format . ../../scripts --config pyproject.toml
+	$(UV) run ruff check --fix . ../../scripts --config pyproject.toml
 
 typecheck:
 	$(UV) run mypy
