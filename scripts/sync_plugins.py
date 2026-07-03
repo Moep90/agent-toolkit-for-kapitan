@@ -69,6 +69,7 @@ PLUGINS: dict[str, dict[str, object]] = {
         "has_mcp": True,
         "skills": [
             "kapitan-inventory-model",
+            "kapitan-input-types",
             "kapitan-secrets-refs",
             "kapitan-debugging-compile",
         ],
