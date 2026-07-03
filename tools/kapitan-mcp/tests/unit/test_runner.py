@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 
 import pytest
+from structlog.testing import capture_logs
 
 from kapitan_mcp.errors import KapitanCliError
 from kapitan_mcp.runner import CommandResult, run, scrub_env
@@ -88,3 +89,35 @@ def test_run__timeout__raises_typed_error(tmp_path: Path) -> None:
         run([sys.executable, "-c", "import time; time.sleep(5)"], cwd=tmp_path, timeout=0.2)
 
     assert "timed out" in str(excinfo.value).lower()
+
+
+def test_run__emits_audit_record_with_argv_and_cwd(tmp_path: Path) -> None:
+    argv = [sys.executable, "-c", "print('x')"]
+
+    with capture_logs() as logs:
+        run(argv, cwd=tmp_path)
+
+    audit = [e for e in logs if e["event"] == "cli_exec"]
+    assert len(audit) == 1
+    assert audit[0]["argv"] == argv
+    assert audit[0]["cwd"] == str(tmp_path)
+
+
+def test_run__audit_record_never_carries_env(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "leak-me")
+
+    with capture_logs() as logs:
+        run([sys.executable, "-c", "print('x')"], cwd=tmp_path)
+
+    blob = repr(logs)
+    assert "leak-me" not in blob
+    assert "AWS_SECRET_ACCESS_KEY" not in blob
+
+
+def test_run__emits_audit_record_even_on_timeout(tmp_path: Path) -> None:
+    with capture_logs() as logs, pytest.raises(KapitanCliError):
+        run([sys.executable, "-c", "import time; time.sleep(5)"], cwd=tmp_path, timeout=0.2)
+
+    assert any(e["event"] == "cli_exec" for e in logs)
