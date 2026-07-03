@@ -2,9 +2,10 @@
 
 ## Reporting a vulnerability
 
-Report privately via GitHub Security Advisories ("Report a vulnerability" on the
-Security tab). Do not open a public issue for security problems. Triage SLA: 72 hours.
-We follow a 90-day coordinated disclosure policy.
+Report privately via GitHub Security Advisories: open a report at
+https://github.com/Moep90/agent-toolkit-for-kapitan/security/advisories/new
+("Report a vulnerability" on the Security tab). Do not open a public issue for security
+problems. Triage SLA: 72 hours. We follow a 90-day coordinated disclosure policy.
 
 ## Supported versions
 
