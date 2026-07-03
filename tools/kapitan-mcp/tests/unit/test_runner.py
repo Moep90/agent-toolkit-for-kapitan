@@ -35,6 +35,14 @@ def test_scrub_env__keeps_locale_vars() -> None:
     assert result["LC_ALL"] == "C"
 
 
+def test_scrub_env__sets_dont_write_bytecode() -> None:
+    # kapitan imports project python (e.g. omegaconf resolvers.py); without this the
+    # import litters inventory/__pycache__ .pyc files in the user's tree.
+    result = scrub_env({"PATH": "/usr/bin"})
+
+    assert result["PYTHONDONTWRITEBYTECODE"] == "1"
+
+
 def test_scrub_env__forwards_only_explicitly_allowed_prefixes() -> None:
     source = {"PATH": "/usr/bin", "AWS_PROFILE": "dev", "GOOGLE_TOKEN": "g"}
 
