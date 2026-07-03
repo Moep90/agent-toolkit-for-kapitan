@@ -80,6 +80,11 @@ def _class_path(root: Path, dotted: str) -> Path | None:
         candidate = base.with_suffix(suffix)
         if candidate.exists():
             return candidate
+    # Directory class: the folder's init.yml stands in for the dotted name.
+    for suffix in (".yml", ".yaml"):
+        candidate = base / f"init{suffix}"
+        if candidate.exists():
+            return candidate
     return None
 
 

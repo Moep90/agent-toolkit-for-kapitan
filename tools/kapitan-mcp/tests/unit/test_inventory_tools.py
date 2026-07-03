@@ -134,3 +134,20 @@ def test_class_hierarchy__reports_ordered_includes(mini_inventory: Path) -> None
 
     dotted = [n.dotted_name for n in result.includes]
     assert dotted == ["common", "component.mysql"]
+
+
+def test_class_hierarchy__resolves_and_recurses_into_directory_init_class(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "inventory/targets").mkdir(parents=True)
+    (tmp_path / "inventory/classes/stack").mkdir(parents=True)
+    (tmp_path / "inventory/targets/t.yml").write_text("classes:\n  - stack\n")
+    # `stack` is a directory class defined by init.yml, which itself includes a child.
+    (tmp_path / "inventory/classes/stack/init.yml").write_text("classes:\n  - stack.child\n")
+    (tmp_path / "inventory/classes/stack/child.yml").write_text("parameters: {}\n")
+
+    result = class_hierarchy(tmp_path, "t")
+
+    by_name = {n.dotted_name: n for n in result.includes}
+    assert by_name["stack"].path == "inventory/classes/stack/init.yml"
+    assert "stack.child" in by_name  # recursion followed the init.yml include
