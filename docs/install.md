@@ -3,7 +3,24 @@
 How to run `kapitan-mcp-server` and adopt the skills, per client. This is the canonical
 install reference; the README links here.
 
-## Prerequisites
+## Choose your layer
+
+Three independent layers. Pick what you need; none requires the others.
+
+| Layer | What you get | Needs | How |
+|---|---|---|---|
+| **Rules** | Guardrails any agent follows via the plain `kapitan` CLI | nothing | `curl` a file from [`rules/`](../rules/), shown per client below |
+| **Skills** | Kapitan knowledge and workflows, no server | nothing to run | `install_skills.py`, or a plugin |
+| **MCP server** | Structured, sandboxed tools (`kapitan_inventory_target`, `kapitan_compile_diff`, …) | `uv` (+ `kapitan`) | a plugin, or manual config |
+
+The per-client sections below install the **plugin**, which bundles the skills and the MCP
+server. Want only guardrails? Skip to the `curl` in your client's section — no `uv`, no
+server needed. Want skills without the server? See
+[Any other MCP client](#any-other-mcp-client).
+
+## Prerequisites (MCP server layer)
+
+Only the MCP server needs these; the rules and skills layers need neither.
 
 - `uv` (to run the server).
 - A `kapitan` CLI on PATH, or the project's `./kapitan` Docker wrapper. The configs below
