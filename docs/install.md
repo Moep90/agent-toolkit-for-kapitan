@@ -10,12 +10,11 @@ Three independent layers. Pick what you need; none requires the others.
 | Layer | What you get | Needs | How |
 |---|---|---|---|
 | **Rules** | Guardrails any agent follows via the plain `kapitan` CLI | nothing | `curl` a file from [`rules/`](../rules/), shown per client below |
-| **Skills** | Kapitan knowledge and workflows, no server | nothing to run | `install_skills.py`, or a plugin |
+| **Skills** | Kapitan knowledge and workflows | nothing to run | included in the plugin |
 | **MCP server** | Structured, sandboxed tools (`kapitan_inventory_target`, `kapitan_compile_diff`, …) | `uv` (+ `kapitan`) | a plugin, or manual config |
 
 The per-client sections below install the **plugin**, which bundles the skills and the MCP
-server. For skills alone, see [Skills without a plugin](#skills-without-a-plugin); for
-guardrails alone, use the `curl` in your client's section.
+server. For guardrails alone, use the `curl` in your client's section.
 
 ## Prerequisites (MCP server layer)
 
@@ -117,17 +116,6 @@ args = ["--with", "kapitan", "--from", "git+https://github.com/Moep90/agent-tool
 ```
 </details>
 
-## Skills without a plugin
-
-The skills are plain markdown — no server involved. Install them into any client that reads
-Agent Skills:
-
-```
-python3 scripts/install_skills.py --list                 # see skills and categories
-python3 scripts/install_skills.py <skills-dir>           # install all
-python3 scripts/install_skills.py <skills-dir> --category core
-```
-
 ## Any other MCP client
 
 Point the client at the `kapitan-mcp-server` command over stdio with a `--project-root`
@@ -142,12 +130,28 @@ curl -fsSL https://raw.githubusercontent.com/Moep90/agent-toolkit-for-kapitan/ma
 
 Everything tracks `main`; there are no versions to bump.
 
-**Claude Code** — refresh the marketplace, then update the plugins:
+**Claude Code** — third-party marketplaces do not auto-update by default. Enable it once in
+`/plugin` → Marketplaces → `agent-toolkit-for-kapitan` → Enable auto-update, or in
+settings.json:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "agent-toolkit-for-kapitan": {
+      "source": { "source": "github", "repo": "Moep90/agent-toolkit-for-kapitan" },
+      "autoUpdate": true
+    }
+  }
+}
+```
+
+To update by hand, refresh the marketplace then update each plugin — the
+`@agent-toolkit-for-kapitan` suffix is required (`/plugin update kapitan-core` alone no-ops):
 
 ```
 /plugin marketplace update agent-toolkit-for-kapitan
-/plugin update kapitan-core
-/plugin update kapitan-generators
+/plugin update kapitan-core@agent-toolkit-for-kapitan
+/plugin update kapitan-generators@agent-toolkit-for-kapitan
 ```
 
 **Codex** — refresh and update:
