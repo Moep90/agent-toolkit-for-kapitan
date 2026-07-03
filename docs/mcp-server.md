@@ -60,6 +60,26 @@ inventory or template change.
 
 No arguments. Runs `kapitan lint` and returns `{ok, output}`.
 
+## Generators
+
+Both read the resolved inventory, so they work on any backend and need no compile.
+
+### kapitan_generator_trace
+
+`targets?` (all targets if omitted). Flags every `components.*` / `generators.*` block that
+no `input_type: kadet` compile entry consumes: the silent no-op where a block emits nothing
+with no error. Returns `{targets: [{target, backend, blocks: [{path, kind, wired,
+matched_input_path, hint}]}], orphans}`. Run it after editing a generator block, before
+`kapitan_compile_diff`. It catches unwired blocks, not mistyped keys inside a block.
+
+### kapitan_generator_schema
+
+`key="components"` (dotted top-level block), `targets?`. Learns a block's schema by example:
+the keys other blocks of the same family already use, with the count of distinct blocks and
+example names. Keys used by exactly one block come back in `rare_keys` as likely typos.
+Returns `{key, blocks_examined, keys: [{key, count, examples}], rare_keys}`. Use it to
+confirm a field name before adding it.
+
 ## Error codes
 
 Failures from the kapitan CLI are translated to actionable codes: `CLASS_NOT_FOUND`,
