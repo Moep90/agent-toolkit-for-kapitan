@@ -29,6 +29,12 @@ exact argv/cwd/env/timeout, and an integration test against the fixtures.
   `Co-Authored-By:` trailers or "Generated with ..." lines to commits or PR descriptions.
   Reviewers reject commits containing them.
 
+## Adding a skill
+
+A skill earns its place by footgun density, not taxonomy coverage. Before adding one, read
+the gate in [skills/README.md](skills/README.md#when-does-something-deserve-a-skill): if it
+cannot name the specific mistake it prevents, it does not belong.
+
 ## Security invariants (never regress these)
 
 - No tool ever reveals secret values; there is deliberately no `refs_reveal` tool.
