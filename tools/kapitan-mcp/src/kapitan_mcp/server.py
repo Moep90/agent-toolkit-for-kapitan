@@ -113,6 +113,14 @@ def create_server(project_root: Path) -> FastMCP:
         kapitan_compile_diff. Catches unwired blocks, not mistyped keys inside a block."""
         return _guard(generators.generator_trace)(root, targets)
 
+    @mcp.tool(name="kapitan_generator_schema")
+    def kapitan_generator_schema(key: str = "components", targets: list[str] | None = None) -> Any:
+        """Report the keys actually used under a generator block (default 'components'),
+        learned from the project's own working blocks. Returns each key with how many blocks
+        use it and examples; keys used by exactly one block come back in rare_keys as likely
+        typos. Use to confirm a field name before adding it, instead of guessing the schema."""
+        return _guard(generators.generator_schema)(root, key, targets)
+
     @mcp.tool(name="kapitan_lint")
     def kapitan_lint() -> Any:
         """Run kapitan's built-in lint (yamllint plus orphan-class checks) and return
