@@ -30,9 +30,10 @@ ROOT = Path(__file__).resolve().parent.parent
 SKILLS = ROOT / "skills"
 PLUGINS_DIR = ROOT / "plugins"
 
-# Single source of the release version stamped into every manifest. The release workflow
-# rewrites this line (VERSION = "...") on each release; do not edit it by hand.
-VERSION = "0.1.0"
+# Static version echoed into every manifest. The project ships rolling from main with no
+# release tags, so this stays fixed; a manifest version field is kept only because some
+# clients expect one.
+VERSION = "0.0.0"
 
 REPO_URL = "https://github.com/Moep90/agent-toolkit-for-kapitan"
 MARKET_NAME = "agent-toolkit-for-kapitan"

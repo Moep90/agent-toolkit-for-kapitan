@@ -41,7 +41,7 @@ Claude Code, from this repo acting as a marketplace (run the two commands separa
 generator, input, kadet, and scaffolding skills. Open a Kapitan repo and ask "what image does
 target prod deploy?" and the agent answers through the tools.
 
-Cursor, Codex, other MCP clients, manual config, and version pinning:
+Cursor, Codex, other MCP clients, manual config, and updating:
 **[docs/install.md](docs/install.md)**.
 
 ## Tools
@@ -67,7 +67,7 @@ Setup, the `make` targets, TDD rules, and commit conventions are in
 
 ## Docs
 
-- [docs/install.md](docs/install.md): install per client, manual config, version pinning.
+- [docs/install.md](docs/install.md): install per client, manual config, updating.
 - [docs/getting-started.md](docs/getting-started.md): a five-minute demo against the example
   project.
 - [docs/mcp-server.md](docs/mcp-server.md): every MCP tool with arguments and response shape.
