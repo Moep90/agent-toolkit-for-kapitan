@@ -25,24 +25,12 @@ marketplace manifests; and rules files for the common clients are in place.
 | `plugins/` | Plugins bundling skills and MCP config, with per-client manifests |
 | `.claude-plugin/`, `.cursor-plugin/`, `.agents/plugins/` | Marketplace manifests, one per client (generated) |
 | `rules/` | AGENTS.md / CLAUDE.md / Cursor rules snippets |
-| `docs/` | Getting started, tool reference, ADRs |
+| `docs/` | Install, getting started, tool reference, ADRs |
 | `examples/demo-project/` | A tiny compilable Kapitan project used in docs and e2e tests |
 
 ## Install
 
-The configs below bundle the `kapitan` CLI with `--with kapitan`, so the server works out of
-the box; drop it if your project pins kapitan or uses the `./kapitan` wrapper. The package is
-not on PyPI yet, so they run it from the repo with `uvx --from git+...` (see
-[`server.json`](server.json) for the registry manifest).
-
-**Pin a version.** Every push to `main` cuts a `vX.Y.Z` tag ([releases]); the examples pin
-`@v0.1.0`. Bump it when you update, or drop the `@...` to track `main`.
-
-[releases]: https://github.com/Moep90/agent-toolkit-for-kapitan/releases
-
-### Claude Code
-
-Install the plugin from this repo acting as a marketplace:
+Claude Code, from this repo acting as a marketplace (run the two commands separately):
 
 ```
 /plugin marketplace add https://github.com/Moep90/agent-toolkit-for-kapitan.git
@@ -50,76 +38,11 @@ Install the plugin from this repo acting as a marketplace:
 ```
 
 `kapitan-core` wires up the MCP server and the core skills; add `kapitan-generators` for the
-generator, input, kadet, and scaffolding skills. Then open a Kapitan repo and ask a question
-like "what image does target prod deploy?" and the agent answers through the tools.
+generator, input, kadet, and scaffolding skills. Open a Kapitan repo and ask "what image does
+target prod deploy?" and the agent answers through the tools.
 
-### Cursor
-
-Add this repo as a plugin marketplace (Cursor Settings → Plugins → Team Marketplaces →
-`https://github.com/Moep90/agent-toolkit-for-kapitan`), then install the `kapitan-core`
-plugin. The plugin carries the MCP server config, so you never paste the server URL. Copy
-`rules/cursor/kapitan.mdc` into your repo's `.cursor/rules/`.
-
-<details>
-<summary>Manual config, without the marketplace</summary>
-
-Add the server to `.cursor/mcp.json` in your Kapitan repo:
-
-```json
-{
-  "mcpServers": {
-    "kapitan": {
-      "command": "uvx",
-      "args": [
-        "--with",
-        "kapitan",
-        "--from",
-        "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git@v0.1.0#subdirectory=tools/kapitan-mcp",
-        "kapitan-mcp-server",
-        "--project-root",
-        "."
-      ]
-    }
-  }
-}
-```
-</details>
-
-### Codex CLI
-
-Add the marketplace, then install the plugin:
-
-```
-codex plugin marketplace add Moep90/agent-toolkit-for-kapitan
-codex plugin install kapitan-core
-```
-
-Drop `rules/AGENTS.md` into your repo so Codex follows the Kapitan guardrails.
-
-<details>
-<summary>Manual config, without the marketplace</summary>
-
-Add the server to `~/.codex/config.toml`:
-
-```toml
-[mcp_servers.kapitan]
-command = "uvx"
-args = ["--with", "kapitan", "--from", "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git@v0.1.0#subdirectory=tools/kapitan-mcp", "kapitan-mcp-server", "--project-root", "/path/to/your/kapitan/repo"]
-```
-</details>
-
-### Any other MCP client
-
-Point the client at the `kapitan-mcp-server` command over stdio with a `--project-root`
-argument. The [tool reference](docs/mcp-server.md) lists every tool and its response shape.
-For non-plugin clients, adopt the skills with the installer (copies the packages into your
-client's skills directory), then add a rules file from `rules/`:
-
-```
-python3 scripts/install_skills.py --list                 # see skills and categories
-python3 scripts/install_skills.py <skills-dir>           # install all
-python3 scripts/install_skills.py <skills-dir> --category core
-```
+Cursor, Codex, other MCP clients, manual config, and version pinning:
+**[docs/install.md](docs/install.md)**.
 
 ## Tools
 
@@ -139,15 +62,16 @@ Full reference with arguments and response shapes: [docs/mcp-server.md](docs/mcp
 
 ## Development
 
-```bash
-make sync        # uv sync the MCP package
-make lint        # ruff check + format check
-make typecheck   # mypy strict
-make test        # pytest (unit; 90% coverage gate on src/)
-```
+Setup, the `make` targets, TDD rules, and commit conventions are in
+[CONTRIBUTING.md](CONTRIBUTING.md). The security model is in [SECURITY.md](SECURITY.md).
 
-TDD is mandatory: write the failing test first, never commit red. See
-[CONTRIBUTING.md](CONTRIBUTING.md).
+## Docs
+
+- [docs/install.md](docs/install.md): install per client, manual config, version pinning.
+- [docs/getting-started.md](docs/getting-started.md): a five-minute demo against the example
+  project.
+- [docs/mcp-server.md](docs/mcp-server.md): every MCP tool with arguments and response shape.
+- [docs/adr/](docs/adr/): Architecture Decision Records.
 
 ## License
 

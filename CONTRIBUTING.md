@@ -3,14 +3,16 @@
 ## Dev setup
 
 ```bash
-make sync        # uv sync the MCP package (tools/kapitan-mcp)
-make lint        # ruff check + format check
-make typecheck   # mypy strict
-make test        # pytest, 90% coverage gate on src/
+make sync            # uv sync the MCP package (tools/kapitan-mcp)
+make lint            # ruff check + format check (src, tests, scripts)
+make typecheck       # mypy strict
+make test            # pytest, 90% coverage gate on src/
+make test-plugin-cli # opt-in: drive real claude/codex CLIs to install from the marketplace
 ```
 
 You need `uv`. A real `kapitan` CLI is only required for the integration tests
-(`make test-integration`); the unit suite mocks the subprocess runner.
+(`make test-integration`); the unit suite mocks the subprocess runner. `test-plugin-cli`
+needs the `claude` and/or `codex` CLIs installed and skips whichever is absent.
 
 ## TDD is mandatory
 

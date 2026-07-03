@@ -1,22 +1,10 @@
 # CLAUDE.md
 
-Contributor guide for Claude Code working in this repo.
+Contributor guide for Claude Code working in this repo. Setup, the `make` targets, and commit
+conventions are in [CONTRIBUTING.md](CONTRIBUTING.md); the full security model is in
+[SECURITY.md](SECURITY.md). The MCP package lives in `tools/kapitan-mcp/`.
 
-## Build & test
-
-```bash
-make sync            # uv sync tools/kapitan-mcp
-make lint            # ruff check + format check (src, tests, scripts)
-make typecheck       # mypy strict
-make test            # pytest, 90% coverage gate on src/
-make test-plugin-cli # opt-in: drive real claude/codex CLIs to install from the marketplace
-```
-
-The MCP package lives in `tools/kapitan-mcp/`. A real `kapitan` CLI is only needed for
-integration tests; unit tests mock the subprocess runner. `test-plugin-cli` needs the
-`claude` and/or `codex` CLIs installed and skips whichever is absent.
-
-## Rules
+## Non-negotiables
 
 - **TDD, always.** Write the failing test first, watch it fail, then minimal code. Never
   commit red. Coverage is a floor (90% on `src/`), not a goal.
@@ -31,5 +19,4 @@ integration tests; unit tests mock the subprocess runner. `test-plugin-cli` need
 ## Architecture
 
 Subprocess-first: we invoke the `kapitan` CLI, not its Python API. See
-[docs/adr/0001-subprocess-first.md](docs/adr/0001-subprocess-first.md). Security model is
-in [SECURITY.md](SECURITY.md).
+[docs/adr/0001-subprocess-first.md](docs/adr/0001-subprocess-first.md).
