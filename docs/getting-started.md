@@ -2,7 +2,7 @@
 
 This walks you from zero to an agent answering resolved-inventory questions about a Kapitan
 project in a few minutes. It uses `examples/demo-project`, a tiny two-target project that
-compiles with no external binaries.
+compiles with the `kapitan` CLI alone, no helm/jsonnet/terraform binaries.
 
 ## Install
 
@@ -21,8 +21,13 @@ Code that is two commands:
 From a checkout at the repo root:
 
 ```bash
-uv --directory tools/kapitan-mcp run kapitan-mcp-server --project-root "$PWD/examples/demo-project"
+uv --directory tools/kapitan-mcp run --extra kapitan kapitan-mcp-server --project-root "$PWD/examples/demo-project"
 ```
+
+`--extra kapitan` installs the `kapitan` CLI into the run environment. It is an optional
+dependency (some setups supply kapitan via the `./kapitan` docker wrapper instead), so without
+it every tool that shells out to kapitan fails with `[Errno 2] No such file or directory:
+'kapitan'`. Only `kapitan_list_targets`, which reads inventory files directly, works without it.
 
 `--directory tools/kapitan-mcp` moves uv's working directory, so `--project-root` must be
 absolute (or relative to `tools/kapitan-mcp`). Pass a path that does not exist and the server
@@ -42,7 +47,7 @@ A browser UI to list tools, fill arguments, and read responses:
 
 ```bash
 npx @modelcontextprotocol/inspector \
-  uv --directory tools/kapitan-mcp run kapitan-mcp-server \
+  uv --directory tools/kapitan-mcp run --extra kapitan kapitan-mcp-server \
   --project-root "$PWD/examples/demo-project"
 ```
 
@@ -59,7 +64,7 @@ the server to answer before EOF:
   '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"cli","version":"1"}}}' \
   '{"jsonrpc":"2.0","method":"notifications/initialized"}' \
   '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"kapitan_list_targets","arguments":{}}}'; sleep 2; } \
-| uv --directory tools/kapitan-mcp run kapitan-mcp-server --project-root "$PWD/examples/demo-project"
+| uv --directory tools/kapitan-mcp run --extra kapitan kapitan-mcp-server --project-root "$PWD/examples/demo-project"
 ```
 
 The `id:2` response lists `dev` and `prod`. Swap the last line for another tool, for example
