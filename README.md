@@ -22,7 +22,8 @@ in place.
 |---|---|
 | `tools/kapitan-mcp/` | Python MCP server (FastMCP, stdio) wrapping the Kapitan CLI |
 | `skills/` | Agent Skills packages, portable across clients |
-| `plugins/` | Claude Code plugins bundling skills and MCP config |
+| `plugins/` | Plugins bundling skills and MCP config, with per-client manifests |
+| `.claude-plugin/`, `.cursor-plugin/`, `.agents/plugins/` | Marketplace manifests, one per client (generated) |
 | `rules/` | AGENTS.md / CLAUDE.md / Cursor rules snippets |
 | `docs/` | Getting started, tool reference, ADRs |
 | `examples/demo-project/` | A tiny compilable Kapitan project used in docs and e2e tests |
@@ -60,7 +61,15 @@ generator, kadet, and scaffolding skills. Then open a Kapitan repo and ask a que
 
 ### Cursor
 
-Add the server to `.cursor/mcp.json` in your Kapitan repo, and copy the Cursor rule:
+Add this repo as a plugin marketplace (Cursor Settings → Plugins → Team Marketplaces →
+`https://github.com/Moep90/agent-toolkit-for-kapitan`), then install the `kapitan-core`
+plugin. The plugin carries the MCP server config, so you never paste the server URL. Copy
+`rules/cursor/kapitan.mdc` into your repo's `.cursor/rules/`.
+
+<details>
+<summary>Manual config, without the marketplace</summary>
+
+Add the server to `.cursor/mcp.json` in your Kapitan repo:
 
 ```json
 {
@@ -80,10 +89,21 @@ Add the server to `.cursor/mcp.json` in your Kapitan repo, and copy the Cursor r
   }
 }
 ```
-
-Copy `rules/cursor/kapitan.mdc` into your repo's `.cursor/rules/`.
+</details>
 
 ### Codex CLI
+
+Add the marketplace, then install the plugin:
+
+```
+codex plugin marketplace add Moep90/agent-toolkit-for-kapitan
+codex plugin install kapitan-core
+```
+
+Drop `rules/AGENTS.md` into your repo so Codex follows the Kapitan guardrails.
+
+<details>
+<summary>Manual config, without the marketplace</summary>
 
 Add the server to `~/.codex/config.toml`:
 
@@ -92,8 +112,7 @@ Add the server to `~/.codex/config.toml`:
 command = "uvx"
 args = ["--with", "kapitan", "--from", "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git@v0.0.5#subdirectory=tools/kapitan-mcp", "kapitan-mcp-server", "--project-root", "/path/to/your/kapitan/repo"]
 ```
-
-Drop `rules/AGENTS.md` into your repo so Codex follows the Kapitan guardrails.
+</details>
 
 ### Any other MCP client
 
