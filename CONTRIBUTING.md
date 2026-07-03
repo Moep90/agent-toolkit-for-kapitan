@@ -3,6 +3,7 @@
 ## Dev setup
 
 ```bash
+mise install         # pinned go/uv/pre-commit from mise.toml (optional)
 make sync            # uv sync the MCP package (tools/kapitan-mcp)
 make lint            # ruff check + format check (src, tests, scripts)
 make typecheck       # mypy strict
