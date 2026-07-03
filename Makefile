@@ -26,7 +26,7 @@ test:
 	$(UV) run pytest -m "not integration and not e2e and not plugin_cli"
 
 test-integration:
-	$(UV) run pytest -m integration
+	$(UV) run --extra kapitan --extra test-backends pytest -m integration --no-cov
 
 test-plugin-cli:
 	$(UV) run pytest -m plugin_cli --no-cov

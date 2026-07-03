@@ -60,5 +60,5 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
-      - run: uv --directory tools/kapitan-mcp sync --extra kapitan
+      - run: uv --directory tools/kapitan-mcp sync --extra kapitan --extra test-backends
       - run: uv --directory tools/kapitan-mcp run pytest -m "integration or e2e" --no-cov
