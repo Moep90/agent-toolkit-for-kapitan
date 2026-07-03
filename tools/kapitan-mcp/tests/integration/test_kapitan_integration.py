@@ -56,6 +56,22 @@ def test_project_info__reports_real_kapitan_version() -> None:
     assert info.backend == "reclass"
 
 
+def test_project_info__reports_selected_reclass_backend(backend_project) -> None:
+    backend, root = backend_project
+    info = project_info(root)
+    assert info.backend == backend
+
+
+def test_inventory_target__reclass_family__resolves_merge_and_interpolation(
+    backend_project,
+) -> None:
+    _, root = backend_project
+    result = inventory_target(root, "dev")
+    assert result.parameters is not None
+    assert result.parameters["mysql"]["image"] == "mysql:8.0"
+    assert result.parameters["namespace"] == "dev"
+
+
 def test_inventory_target__missing_class__raises_class_not_found(tmp_path: Path) -> None:
     proj = tmp_path / "proj"
     shutil.copytree(FIXTURE, proj)
