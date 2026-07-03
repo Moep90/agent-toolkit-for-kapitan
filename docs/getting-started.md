@@ -4,67 +4,29 @@ This walks you from zero to an agent answering resolved-inventory questions abou
 project in a few minutes. It uses `examples/demo-project`, a tiny two-target project that
 compiles with no external binaries.
 
-## Prerequisites
+## Install
 
-- `uv` (for running the server) and a `kapitan` CLI on PATH, or the project's `./kapitan`
-  Docker wrapper.
+Install the server and skills for your client following [install.md](install.md). For Claude
+Code that is two commands:
 
-## Run the server against the demo
+```
+/plugin marketplace add https://github.com/Moep90/agent-toolkit-for-kapitan.git
+/plugin install kapitan-core
+```
 
-From a checkout:
+`kapitan-core` wires up the MCP server (via `uvx kapitan-mcp-server`) and the core skills.
+
+## Run against the demo
+
+To try the server with no real project, from a checkout:
 
 ```bash
 uv --directory tools/kapitan-mcp run kapitan-mcp-server --project-root examples/demo-project
 ```
 
-The server speaks MCP over stdio. Point any MCP client at it.
-
-## Claude Code
-
-Install the plugin from this repo acting as a marketplace:
-
-Run these one at a time (the marketplace URL and the install are separate commands):
-
-```
-/plugin marketplace add https://github.com/Moep90/agent-toolkit-for-kapitan.git
-```
-
-```
-/plugin install kapitan-core
-```
-
-The `kapitan-core` plugin wires up the MCP server (via `uvx kapitan-mcp-server`) and the
-core skills. Open a Kapitan repo and ask, for example, "what namespace does the dev target
-resolve to?". The agent calls `kapitan_inventory_target` instead of guessing.
-
-## Cursor / Codex / plain MCP
-
-Add the server to your client's MCP config:
-
-```json
-{
-  "mcpServers": {
-    "kapitan": {
-      "command": "uvx",
-      "args": [
-        "--with",
-        "kapitan",
-        "--from",
-        "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git#subdirectory=tools/kapitan-mcp",
-        "kapitan-mcp-server",
-        "--project-root",
-        "/path/to/your/kapitan/repo"
-      ]
-    }
-  }
-}
-```
-
-`--with kapitan` bundles the kapitan CLI into the server's environment. Drop it if your
-project pins kapitan or uses the `./kapitan` Docker wrapper.
-
-Drop `rules/AGENTS.md` (or the Cursor rules in `rules/cursor/kapitan.mdc`) into your repo so
-the agent follows the Kapitan guardrails.
+The server speaks MCP over stdio; point any MCP client at it. Open the demo (or your own
+Kapitan repo) and ask, for example, "what namespace does the dev target resolve to?" and the
+agent calls `kapitan_inventory_target` instead of guessing.
 
 ## Five-minute demo
 
