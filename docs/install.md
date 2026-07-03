@@ -36,12 +36,24 @@ Install the plugin from this repo acting as a marketplace (run the two commands 
 generator, input, kadet, and scaffolding skills. Then open a Kapitan repo and ask a question
 like "what image does target prod deploy?" and the agent answers through the tools.
 
+The skills already carry the guardrails. To also pin them into the repo's `CLAUDE.md` (handy
+for contributors without the plugin):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Moep90/agent-toolkit-for-kapitan/main/rules/CLAUDE.md >> CLAUDE.md
+```
+
 ## Cursor
 
 Add this repo as a plugin marketplace (Cursor Settings → Plugins → Team Marketplaces →
 `https://github.com/Moep90/agent-toolkit-for-kapitan`), then install the `kapitan-core`
 plugin. The plugin carries the MCP server config, so you never paste the server URL. Copy
-[`rules/cursor/kapitan.mdc`](../rules/cursor/kapitan.mdc) into your repo's `.cursor/rules/`.
+[`rules/cursor/kapitan.mdc`](../rules/cursor/kapitan.mdc) into your repo's `.cursor/rules/`:
+
+```bash
+mkdir -p .cursor/rules
+curl -fsSL https://raw.githubusercontent.com/Moep90/agent-toolkit-for-kapitan/main/rules/cursor/kapitan.mdc -o .cursor/rules/kapitan.mdc
+```
 
 <details>
 <summary>Manual config, without the marketplace</summary>
@@ -78,7 +90,11 @@ codex plugin install kapitan-core
 ```
 
 Drop [`rules/AGENTS.md`](../rules/AGENTS.md) into your repo so Codex follows the Kapitan
-guardrails.
+guardrails:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Moep90/agent-toolkit-for-kapitan/main/rules/AGENTS.md >> AGENTS.md
+```
 
 <details>
 <summary>Manual config, without the marketplace</summary>
@@ -103,6 +119,12 @@ non-plugin clients, adopt the skills with the installer, then add a rules file f
 python3 scripts/install_skills.py --list                 # see skills and categories
 python3 scripts/install_skills.py <skills-dir>           # install all
 python3 scripts/install_skills.py <skills-dir> --category core
+```
+
+Most agents read a generic `AGENTS.md`; drop the guardrails in with:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Moep90/agent-toolkit-for-kapitan/main/rules/AGENTS.md >> AGENTS.md
 ```
 
 ## Try it against the demo
