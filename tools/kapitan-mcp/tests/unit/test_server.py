@@ -56,7 +56,8 @@ def test_create_server__read_only_tools_annotated_read_only(mini_inventory: Path
     }
     for name in read_only:
         ann = tools[name].annotations
-        assert ann is not None and ann.readOnlyHint is True, f"{name} not marked read-only"
+        assert ann is not None, f"{name} has no annotations"
+        assert ann.readOnlyHint is True, f"{name} not marked read-only"
 
 
 def test_create_server__compile_annotated_destructive(mini_inventory: Path) -> None:
