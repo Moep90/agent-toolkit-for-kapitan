@@ -23,8 +23,8 @@ integration tests; unit tests mock the subprocess runner.
 - **No secret reveal, ever.** There is deliberately no `refs_reveal` tool; `--reveal` must
   not appear anywhere in `src/`.
 - **Commit messages: Conventional Commit subject + imperative body + DCO sign-off, nothing
-  else.** No `Co-Authored-By:` trailers, no "Generated with ..." lines (`includeCoAuthoredBy`
-  is off in `.claude/settings.json`).
+  else.** No `Co-Authored-By:` trailers, no "Generated with ..." lines (set
+  `includeCoAuthoredBy: false` in your user-level `~/.claude/settings.json`).
 
 ## Architecture
 

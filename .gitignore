@@ -21,3 +21,6 @@ htmlcov/
 # Editors / OS
 .DS_Store
 *.swp
+
+# Local Claude Code config (settings are user-level, not committed)
+.claude/
