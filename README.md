@@ -40,7 +40,7 @@ The package is not on PyPI yet, so the config runs the server straight from the 
 clients in [`server.json`](server.json) (the Model Context Protocol registry manifest).
 
 **Pin a version.** Every push to `main` cuts a `vX.Y.Z` tag ([releases]). The examples below
-pin the git ref to `@v0.0.5` for reproducible behaviour; bump it to the newest tag when you
+pin the git ref to `@v0.1.0` for reproducible behaviour; bump it to the newest tag when you
 update, or drop the `@...` to track `main`. After PyPI publish, pin the released version
 instead (`kapitan-mcp-server==X.Y.Z`).
 
@@ -80,7 +80,7 @@ Add the server to `.cursor/mcp.json` in your Kapitan repo:
         "--with",
         "kapitan",
         "--from",
-        "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git@v0.0.5#subdirectory=tools/kapitan-mcp",
+        "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git@v0.1.0#subdirectory=tools/kapitan-mcp",
         "kapitan-mcp-server",
         "--project-root",
         "."
@@ -110,7 +110,7 @@ Add the server to `~/.codex/config.toml`:
 ```toml
 [mcp_servers.kapitan]
 command = "uvx"
-args = ["--with", "kapitan", "--from", "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git@v0.0.5#subdirectory=tools/kapitan-mcp", "kapitan-mcp-server", "--project-root", "/path/to/your/kapitan/repo"]
+args = ["--with", "kapitan", "--from", "git+https://github.com/Moep90/agent-toolkit-for-kapitan.git@v0.1.0#subdirectory=tools/kapitan-mcp", "kapitan-mcp-server", "--project-root", "/path/to/your/kapitan/repo"]
 ```
 </details>
 

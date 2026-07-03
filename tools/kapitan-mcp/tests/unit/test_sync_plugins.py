@@ -68,6 +68,22 @@ def test_render_is_deterministic_and_newline_terminated() -> None:
     assert first.endswith("\n")
 
 
+def test_all_manifest_versions_come_from_the_single_version_constant() -> None:
+    # Every version string in the generated manifests must equal sync_plugins.VERSION, so the
+    # release workflow only has to rewrite that one constant.
+    def _versions(obj: object) -> list[str]:
+        if isinstance(obj, dict):
+            found = [v for k, v in obj.items() if k == "version" and isinstance(v, str)]
+            return found + [v for value in obj.values() for v in _versions(value)]
+        if isinstance(obj, list):
+            return [v for item in obj for v in _versions(item)]
+        return []
+
+    for content in sync_plugins._manifests().values():
+        for version in _versions(content):
+            assert version == sync_plugins.VERSION
+
+
 def test_check_mode_passes_on_the_committed_tree() -> None:
     # Guards that the committed manifests and bundles match the generator (CI's gate).
     assert sync_plugins.sync(check=True) == 0

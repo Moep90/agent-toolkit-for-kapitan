@@ -1,10 +1,17 @@
 name: Release
 
-# Every push to main cuts a release: the next version is computed from Conventional
-# Commits, tagged, and turned into a GitHub release. When the PUBLISH_ENABLED repository
-# variable is "true", the package is also built and published to PyPI (Trusted Publishing)
-# and the Model Context Protocol registry. Actions are pinned to full commit SHAs;
-# Dependabot keeps them fresh.
+# Every push to main computes the next version from Conventional Commits. When a release is
+# warranted, the version is stamped into the plugin manifests and README pins and committed
+# back to main, then that commit is tagged and turned into a GitHub release. With the
+# PUBLISH_ENABLED repository variable set to "true", the package is also built and published
+# to PyPI (Trusted Publishing) and the Model Context Protocol registry.
+#
+# The stamp-and-commit step needs RELEASE_TOKEN, a personal access token from a repo admin,
+# because main is protected and the default GITHUB_TOKEN cannot push to it. Without
+# RELEASE_TOKEN the stamp is skipped and the merge commit is tagged as-is, so releases never
+# break; the manifests just keep their previous version until the token is configured.
+#
+# Actions are pinned to full commit SHAs; Dependabot keeps them fresh.
 
 on:
   push:
@@ -21,12 +28,13 @@ jobs:
   release:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # create the tag and the GitHub release
+      contents: write # create the tag, the release, and the stamp commit
       id-token: write # PyPI Trusted Publishing and MCP registry OIDC
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Compute next version from Conventional Commits
         id: tag
@@ -36,6 +44,36 @@ jobs:
           default_bump: false # only feat:/fix:/breaking cut a release; docs:/chore:/ci: do not
           release_branches: main
           tag_prefix: v
+          dry_run: true # compute only; this workflow creates the tag after stamping
+
+      - name: Detect the release token
+        id: gate
+        run: echo "has_token=${{ secrets.RELEASE_TOKEN != '' }}" >> "$GITHUB_OUTPUT"
+
+      - name: Stamp the version and commit it back to main
+        if: steps.tag.outputs.new_tag != '' && steps.gate.outputs.has_token == 'true'
+        env:
+          VER: ${{ steps.tag.outputs.new_version }}
+          TAG: ${{ steps.tag.outputs.new_tag }}
+        run: |
+          sed -i -E "s/^VERSION = .*/VERSION = \"${VER}\"/" scripts/sync_plugins.py
+          python3 scripts/sync_plugins.py
+          sed -i -E "s/@v[0-9]+\.[0-9]+\.[0-9]+/@v${VER}/g" README.md
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet; then
+            # [skip ci] stops this push from re-triggering the release workflow.
+            git commit -am "chore(release): ${TAG} [skip ci]"
+            git push origin HEAD:main
+          fi
+
+      - name: Tag the release
+        if: steps.tag.outputs.new_tag != ''
+        env:
+          TAG: ${{ steps.tag.outputs.new_tag }}
+        run: |
+          git tag "${TAG}"
+          git push origin "${TAG}"
 
       - name: Create GitHub release
         if: steps.tag.outputs.new_tag != ''
