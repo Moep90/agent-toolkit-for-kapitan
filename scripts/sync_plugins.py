@@ -30,11 +30,8 @@ ROOT = Path(__file__).resolve().parent.parent
 SKILLS = ROOT / "skills"
 PLUGINS_DIR = ROOT / "plugins"
 
-# Static version echoed into every manifest. The project ships rolling from main with no
-# release tags, so this stays fixed; a manifest version field is kept only because some
-# clients expect one.
-VERSION = "0.0.0"
-
+# No manifest version field: the project ships rolling from main. Clients fall back to the
+# git commit SHA for update detection, so every commit counts as a new version.
 REPO_URL = "https://github.com/Moep90/agent-toolkit-for-kapitan"
 MARKET_NAME = "agent-toolkit-for-kapitan"
 MARKET_DESCRIPTION = "Agent plugins that make AI coding agents good at Kapitan projects."
@@ -45,8 +42,8 @@ LICENSE = "Apache-2.0"
 CATEGORY = "devops"  # Claude/Cursor marketplaces
 CATEGORY_TITLE = "DevOps"  # Codex/agents marketplace
 
-# The one source of truth for every plugin. Descriptions and versions are echoed into all
-# manifests below; edit them here, then run this script.
+# The one source of truth for every plugin. Descriptions are echoed into all manifests
+# below; edit them here, then run this script.
 PLUGINS: dict[str, dict[str, object]] = {
     "kapitan-core": {
         "displayName": "Kapitan Core",
@@ -54,7 +51,6 @@ PLUGINS: dict[str, dict[str, object]] = {
             "Kapitan MCP server plus core skills: the inventory model, secret refs, and "
             "compile debugging."
         ),
-        "version": VERSION,
         "keywords": [
             "kapitan",
             "inventory",
@@ -81,7 +77,6 @@ PLUGINS: dict[str, dict[str, object]] = {
             "Skills for the kapicorp Kubernetes and Terraform generators, kadet authoring, "
             "and project scaffolding."
         ),
-        "version": VERSION,
         "keywords": [
             "kapitan",
             "kadet",
@@ -111,7 +106,7 @@ def _claude_marketplace() -> dict[str, object]:
     return {
         "name": MARKET_NAME,
         "owner": {"name": OWNER},
-        "metadata": {"description": MARKET_DESCRIPTION, "version": VERSION},
+        "metadata": {"description": MARKET_DESCRIPTION},
         "plugins": [
             {
                 "name": name,
@@ -119,7 +114,6 @@ def _claude_marketplace() -> dict[str, object]:
                 "description": p["description"],
                 "category": CATEGORY,
                 "keywords": p["keywords"],
-                "version": p["version"],
             }
             for name, p in PLUGINS.items()
         ],
@@ -157,7 +151,6 @@ def _agents_marketplace() -> dict[str, object]:
 def _claude_plugin(name: str, p: dict[str, object]) -> dict[str, object]:
     return {
         "name": name,
-        "version": p["version"],
         "description": p["description"],
         "author": {"name": AUTHOR},
     }
@@ -168,7 +161,6 @@ def _cursor_plugin(name: str, p: dict[str, object]) -> dict[str, object]:
         "name": name,
         "displayName": p["displayName"],
         "description": p["description"],
-        "version": p["version"],
         "author": {"name": AUTHOR},
         "homepage": REPO_URL,
         "repository": REPO_URL,
@@ -187,7 +179,6 @@ def _codex_plugin(name: str, p: dict[str, object]) -> dict[str, object]:
     short = "Kapitan agent plugin with skills" + (" and an MCP server" if has_mcp else "")
     manifest: dict[str, object] = {
         "name": name,
-        "version": p["version"],
         "description": p["description"],
         "author": {"name": AUTHOR, "url": REPO_URL},
         "homepage": REPO_URL,

@@ -4,8 +4,7 @@
     "name": "Moep90"
   },
   "metadata": {
-    "description": "Agent plugins that make AI coding agents good at Kapitan projects.",
-    "version": "0.0.0"
+    "description": "Agent plugins that make AI coding agents good at Kapitan projects."
   },
   "plugins": [
     {
@@ -24,8 +23,7 @@
         "kubernetes",
         "config-management",
         "gitops"
-      ],
-      "version": "0.0.0"
+      ]
     },
     {
       "name": "kapitan-generators",
@@ -41,8 +39,7 @@
         "scaffolding",
         "manifests",
         "config-management"
-      ],
-      "version": "0.0.0"
+      ]
     }
   ]
 }
