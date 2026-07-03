@@ -8,7 +8,13 @@ make lint            # ruff check + format check (src, tests, scripts)
 make typecheck       # mypy strict
 make test            # pytest, 90% coverage gate on src/
 make test-plugin-cli # opt-in: drive real claude/codex CLIs to install from the marketplace
+
+# Install the hooks once: ruff/mypy on commit, the full CI gate on push.
+pre-commit install --hook-type pre-commit --hook-type pre-push
 ```
+
+The `pre-push` hook runs `make lint typecheck check-plugins test` so a
+red branch never reaches main. Bypass one push with `git push --no-verify`.
 
 You need `uv`. A real `kapitan` CLI is only required for the integration tests
 (`make test-integration`); the unit suite mocks the subprocess runner. `test-plugin-cli`

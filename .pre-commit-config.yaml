@@ -1,4 +1,6 @@
 # Pin `rev`s are refreshed by Dependabot. Bump to the current release when adding hooks.
+# Framework hooks below run on commit only; the push stage runs just the ci-gate hook.
+default_stages: [pre-commit]
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
@@ -38,3 +40,13 @@ repos:
     rev: v1.7.4
     hooks:
       - id: actionlint
+  # Push-stage gate mirroring the CI quality + test jobs. Commit-stage ruff only sees
+  # changed files and never runs the tests, so this catches what reaches main otherwise.
+  - repo: local
+    hooks:
+      - id: ci-gate
+        name: make lint typecheck check-plugins test
+        entry: make lint typecheck check-plugins test
+        language: system
+        pass_filenames: false
+        stages: [pre-push]
