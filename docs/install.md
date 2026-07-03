@@ -147,20 +147,20 @@ settings.json:
 }
 ```
 
-To update by hand, refresh the marketplace then update each plugin. The
-`@agent-toolkit-for-kapitan` suffix is required; `/plugin update kapitan-core` alone no-ops:
+To update by hand, run these in a shell. The in-app `/plugin` command opens the interactive
+UI instead of taking arguments, so use the `claude` CLI. The `@agent-toolkit-for-kapitan`
+suffix is required (the bare name is not found), and a restart applies the change:
 
-```
-/plugin marketplace update agent-toolkit-for-kapitan
-/plugin update kapitan-core@agent-toolkit-for-kapitan
-/plugin update kapitan-generators@agent-toolkit-for-kapitan
+```bash
+claude plugin marketplace update agent-toolkit-for-kapitan
+claude plugin update kapitan-core@agent-toolkit-for-kapitan
+claude plugin update kapitan-generators@agent-toolkit-for-kapitan
 ```
 
-**Codex.** Refresh and update:
+**Codex.** Refresh the marketplace snapshot; installed plugins track it:
 
-```
-codex plugin marketplace update
-codex plugin update kapitan-core
+```bash
+codex plugin marketplace upgrade agent-toolkit-for-kapitan
 ```
 
 **MCP server (any client).** The server tracks `main`, but `uvx` caches the git build and
