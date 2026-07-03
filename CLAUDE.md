@@ -5,14 +5,16 @@ Contributor guide for Claude Code working in this repo.
 ## Build & test
 
 ```bash
-make sync        # uv sync tools/kapitan-mcp
-make lint        # ruff check + format check
-make typecheck   # mypy strict
-make test        # pytest, 90% coverage gate on src/
+make sync            # uv sync tools/kapitan-mcp
+make lint            # ruff check + format check (src, tests, scripts)
+make typecheck       # mypy strict
+make test            # pytest, 90% coverage gate on src/
+make test-plugin-cli # opt-in: drive real claude/codex CLIs to install from the marketplace
 ```
 
 The MCP package lives in `tools/kapitan-mcp/`. A real `kapitan` CLI is only needed for
-integration tests; unit tests mock the subprocess runner.
+integration tests; unit tests mock the subprocess runner. `test-plugin-cli` needs the
+`claude` and/or `codex` CLIs installed and skips whichever is absent.
 
 ## Rules
 

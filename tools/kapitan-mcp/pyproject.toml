@@ -48,6 +48,8 @@ select = ["E", "F", "I", "B", "UP", "S", "N", "PT", "RUF"]   # S = bandit securi
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101"]   # asserts are expected in tests
+# This suite deliberately shells out to the trusted local client CLIs with static args.
+"tests/integration/test_plugin_cli.py" = ["S101", "S603", "S607"]
 
 [tool.mypy]
 strict = true
@@ -59,4 +61,5 @@ testpaths = ["tests"]
 markers = [
     "integration: requires a real kapitan CLI",
     "e2e: full MCP protocol over stdio",
+    "plugin_cli: drives a real client CLI (claude/codex) to install from the marketplace",
 ]

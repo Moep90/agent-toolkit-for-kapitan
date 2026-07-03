@@ -1,11 +1,11 @@
 MCP_DIR := tools/kapitan-mcp
 UV := uv --directory $(MCP_DIR)
 
-.PHONY: help sync lint format typecheck test test-integration evals all \
+.PHONY: help sync lint format typecheck test test-integration test-plugin-cli evals all \
         sync-plugins check-plugins validate-skills
 
 help:
-	@echo "Targets: sync lint format typecheck test test-integration evals all"
+	@echo "Targets: sync lint format typecheck test test-integration test-plugin-cli evals all"
 	@echo "         sync-plugins check-plugins validate-skills"
 
 sync:
@@ -23,10 +23,13 @@ typecheck:
 	$(UV) run mypy
 
 test:
-	$(UV) run pytest -m "not integration and not e2e"
+	$(UV) run pytest -m "not integration and not e2e and not plugin_cli"
 
 test-integration:
 	$(UV) run pytest -m integration
+
+test-plugin-cli:
+	$(UV) run pytest -m plugin_cli --no-cov
 
 validate-skills:
 	python3 scripts/validate_skills.py
