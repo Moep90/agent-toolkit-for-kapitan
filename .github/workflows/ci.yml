@@ -27,7 +27,7 @@ jobs:
       - run: make validate-skills
       - run: make check-plugins
 
-  test:
+  test-matrix:
     strategy:
       fail-fast: false
       matrix:
@@ -40,6 +40,20 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: make test
+
+  # Single named gate over the whole matrix, so branch protection can require "test"
+  # without enumerating every python/os leg.
+  test:
+    needs: [test-matrix]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every test-matrix leg to pass
+        run: |
+          if [ "${{ needs.test-matrix.result }}" != "success" ]; then
+            echo "test-matrix did not succeed: ${{ needs.test-matrix.result }}"
+            exit 1
+          fi
 
   integration:
     runs-on: ubuntu-latest
