@@ -1,5 +1,6 @@
 ---
 name: kapitan-inventory-model
+category: core
 description: >-
   Use whenever the user works with a Kapitan inventory: targets, classes, reclass,
   reclass-rs, omegaconf, parameter merging, ${...} interpolation, target labels, or edits

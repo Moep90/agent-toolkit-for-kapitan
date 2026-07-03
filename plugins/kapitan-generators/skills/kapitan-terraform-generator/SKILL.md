@@ -1,5 +1,6 @@
 ---
 name: kapitan-terraform-generator
+category: generators
 description: >-
   Use when generating Terraform through the kapicorp Terraform generator: a Kapitan
   inventory that produces provider blocks, resources, and project layout for Terraform

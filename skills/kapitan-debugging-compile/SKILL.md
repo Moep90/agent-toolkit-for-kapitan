@@ -1,5 +1,6 @@
 ---
 name: kapitan-debugging-compile
+category: core
 description: >-
   Use when a Kapitan compile fails or produces the wrong output: class-not-found errors,
   unresolved ${...} interpolation, backend mismatches, missing helm or jsonnet binaries,

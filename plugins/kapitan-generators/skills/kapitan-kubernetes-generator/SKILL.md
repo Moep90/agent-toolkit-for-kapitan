@@ -1,5 +1,6 @@
 ---
 name: kapitan-kubernetes-generator
+category: generators
 description: >-
   Use when configuring Kubernetes workloads through the kapicorp generators: the
   components: block in a Kapitan inventory that produces Deployments, StatefulSets, Services,
