@@ -6,6 +6,9 @@ repos:
     rev: v5.0.0
     hooks:
       - id: end-of-file-fixer
+        # compiled/ fixtures are golden kapitan output, byte-exact with a real compile
+        # (kapitan's jinja2 renderer strips the final newline); don't reformat them.
+        exclude: ^tools/kapitan-mcp/tests/fixtures/.*/compiled/
       - id: trailing-whitespace
       - id: check-merge-conflict
       - id: check-added-large-files

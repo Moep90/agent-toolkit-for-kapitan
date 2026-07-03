@@ -12,6 +12,7 @@ from kapitan_mcp.tools.compile import compile_diff, compile_targets
 pytestmark = pytest.mark.integration
 
 FIXTURE = Path(__file__).parent.parent / "fixtures" / "mini-inventory"
+OMEGA = Path(__file__).parent.parent / "fixtures" / "omega-inventory"
 
 
 @pytest.fixture(autouse=True)
@@ -24,6 +25,13 @@ def _require_kapitan() -> None:
 def project(tmp_path: Path) -> Path:
     dest = tmp_path / "proj"
     shutil.copytree(FIXTURE, dest)
+    return dest
+
+
+@pytest.fixture
+def omega_project(tmp_path: Path) -> Path:
+    dest = tmp_path / "proj"
+    shutil.copytree(OMEGA, dest)
     return dest
 
 
@@ -71,3 +79,23 @@ def test_compile_diff__never_writes_into_committed_compiled(project: Path) -> No
 
     after = sorted(p.name for p in (project / "compiled").rglob("*"))
     assert before == after
+
+
+def test_compile_diff__reclass_family_backend__no_source_change__empty_diff(
+    backend_project,
+) -> None:
+    _, root = backend_project
+
+    result = compile_diff(root, ["dev", "prod"])
+
+    assert result.changed_files == []
+    assert result.unchanged_count >= 2
+
+
+def test_compile_diff__omegaconf_backend__no_source_change__empty_diff(
+    omega_project: Path,
+) -> None:
+    result = compile_diff(omega_project, ["dev", "prod"])
+
+    assert result.changed_files == []
+    assert result.unchanged_count >= 2
