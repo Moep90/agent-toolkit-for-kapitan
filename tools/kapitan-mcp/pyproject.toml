@@ -15,6 +15,10 @@ dependencies = [
 
 [project.optional-dependencies]
 kapitan = ["kapitan"]   # optional: users may use the ./kapitan docker wrapper instead
+# Pinned to the version the unpinned `kapitan` extra currently resolves to, so both
+# extras can be installed together without pulling a second kapitan version that
+# triggers a jsonnet/rapidyaml source build. Bump in lockstep if `kapitan` moves.
+test-backends = ["kapitan[omegaconf,reclass-rs]==0.36.2", "omegaconf>=2.4.0.dev3"]
 
 [project.scripts]
 kapitan-mcp-server = "kapitan_mcp.server:main"
