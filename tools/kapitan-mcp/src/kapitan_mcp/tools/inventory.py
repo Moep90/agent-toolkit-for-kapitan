@@ -27,6 +27,7 @@ from kapitan_mcp.models import (
     Target,
     TargetList,
 )
+from kapitan_mcp.project import resolve_kapitan
 
 RunFn = Callable[..., runner.CommandResult]
 
@@ -92,7 +93,7 @@ def project_info(root: Path, *, run: RunFn = runner.run) -> ProjectInfo:
     version: str | None = None
     warnings: list[str] = []
     try:
-        result = run(["kapitan", "--version"], cwd=root, timeout=30)
+        result = run([resolve_kapitan(root), "--version"], cwd=root, timeout=30)
         version = result.stdout.strip().split()[-1] if result.stdout.strip() else None
     except Exception as exc:
         warnings.append(f"could not determine kapitan version: {exc}")
@@ -152,7 +153,7 @@ def inventory_target(
     backend = _read_backend(root)
     try:
         result = run(
-            ["kapitan", "inventory", "-t", target, "--inventory-backend", backend],
+            [resolve_kapitan(root), "inventory", "-t", target, "--inventory-backend", backend],
             cwd=root,
         )
     except KapitanCliError as exc:

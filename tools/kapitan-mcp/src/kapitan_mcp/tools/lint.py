@@ -12,6 +12,7 @@ from pathlib import Path
 from kapitan_mcp import runner
 from kapitan_mcp.errors import KapitanCliError
 from kapitan_mcp.models import LintResult
+from kapitan_mcp.project import resolve_kapitan
 
 RunFn = Callable[..., runner.CommandResult]
 
@@ -20,7 +21,7 @@ def lint(root: Path, *, run: RunFn = runner.run) -> LintResult:
     """Run ``kapitan lint`` and report whether it passed, with the raw output."""
     root = root.resolve()
     try:
-        result = run(["kapitan", "lint"], cwd=root)
+        result = run([resolve_kapitan(root), "lint"], cwd=root)
         return LintResult(ok=True, output=(result.stdout + result.stderr).strip())
     except KapitanCliError as exc:
         return LintResult(ok=False, output=(exc.stdout + exc.stderr).strip())
