@@ -615,7 +615,7 @@ name = "exceptiongroup"
 version = "1.3.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "typing-extensions", marker = "python_full_version < '3.13'" },
+    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/50/79/66800aadf48771f6b62f7eb014e352e5d06856655206165d775e675a02c9/exceptiongroup-1.3.1.tar.gz", hash = "sha256:8b412432c6055b0b7d14c310000ae93352ed6754f70fa8f7c34141f91c4e3219", size = 30371, upload-time = "2025-11-21T23:01:54.787Z" }
 wheels = [
@@ -963,7 +963,7 @@ wheels = [
 
 [[package]]
 name = "kapitan"
-version = "0.36.2"
+version = "0.36.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "addict" },
@@ -998,9 +998,9 @@ dependencies = [
     { name = "typing-extensions" },
     { name = "yamllint" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/04/5b/767767feaacc7d42c84433ed406e543131df6c09aa8fef0a3fb89b4411c5/kapitan-0.36.2.tar.gz", hash = "sha256:e92d1156bc75f1bb737975d72fbc50eb5aa450a09ae03f4793e10eb328a4e40a", size = 4118238, upload-time = "2026-06-23T08:25:06.883Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/16/92/eacd28d7dc02fc1ccb05fe5eb0551b359b54307908a4afe6464204285e93/kapitan-0.36.3.tar.gz", hash = "sha256:a32adedf38c8056a4a26d95610868e3f36b9834d46fce33ad06862bdd4f1e317", size = 4126943, upload-time = "2026-07-03T15:09:17.805Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cb/82/7512049b80935818beb9b68346373eac71b67dafede98a21e9f928c7cd46/kapitan-0.36.2-py3-none-any.whl", hash = "sha256:7787165d0ac3e852beddc12bcb6a8244f206b27656dd5a49252a078a650e5fec", size = 169069, upload-time = "2026-06-23T08:25:05.496Z" },
+    { url = "https://files.pythonhosted.org/packages/f5/bb/56f2d82d4815dbf30c4c2594446f7b24c365b3a28fa33277d8a5fbd610bf/kapitan-0.36.3-py3-none-any.whl", hash = "sha256:76aef58b2b372469c47afde3cccc5dabc4b45eee5bb1b6f1c7f978ca4959082f", size = 171767, upload-time = "2026-07-03T15:09:16.286Z" },
 ]
 
 [package.optional-dependencies]
@@ -1043,7 +1043,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "kapitan", marker = "extra == 'kapitan'" },
-    { name = "kapitan", extras = ["omegaconf", "reclass-rs"], marker = "extra == 'test-backends'", specifier = "==0.36.2" },
+    { name = "kapitan", extras = ["omegaconf", "reclass-rs"], marker = "extra == 'test-backends'", specifier = "==0.36.3" },
     { name = "mcp", specifier = ">=1.2" },
     { name = "omegaconf", marker = "extra == 'test-backends'", specifier = ">=2.4.0.dev3" },
     { name = "pydantic", specifier = ">=2" },
