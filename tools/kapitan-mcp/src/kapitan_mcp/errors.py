@@ -25,8 +25,8 @@ class KapitanMcpError(Exception):
 class ProjectNotFoundError(KapitanMcpError):
     code = "PROJECT_NOT_FOUND"
     remediation = (
-        "Start the server with --project-root pointing at a Kapitan repo "
-        "(one containing .kapitan or inventory/)."
+        "Run the client from inside a Kapitan repo (one containing .kapitan or "
+        "inventory/), or start the server with --project-root pointing at one."
     )
 
 
