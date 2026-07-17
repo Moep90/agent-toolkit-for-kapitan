@@ -4,6 +4,12 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    groups:
+      # init/analyze/upload-sarif must move in lockstep: CodeQL fails the run
+      # when steps in one workflow use different codeql-action versions.
+      codeql-action:
+        patterns:
+          - github/codeql-action*
   - package-ecosystem: uv
     directory: /tools/kapitan-mcp
     schedule:
