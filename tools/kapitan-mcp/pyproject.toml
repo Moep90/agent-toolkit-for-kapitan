@@ -34,7 +34,7 @@ packages = ["src/kapitan_mcp"]
 dev = [
     "pytest>=8",
     "pytest-cov>=5",
-    "mypy>=1.11",
+    "mypy>=2.3.0",
     "ruff>=0.6",
     "types-PyYAML>=6",
 ]
