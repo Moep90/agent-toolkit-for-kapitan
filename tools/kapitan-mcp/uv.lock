@@ -1045,7 +1045,7 @@ requires-dist = [
     { name = "kapitan", marker = "extra == 'kapitan'" },
     { name = "kapitan", extras = ["omegaconf", "reclass-rs"], marker = "extra == 'test-backends'", specifier = "==0.36.3" },
     { name = "mcp", specifier = ">=1.2" },
-    { name = "omegaconf", marker = "extra == 'test-backends'", specifier = ">=2.4.0.dev3" },
+    { name = "omegaconf", marker = "extra == 'test-backends'", specifier = ">=2.4.0.dev13" },
     { name = "pydantic", specifier = ">=2" },
     { name = "pyyaml", specifier = ">=6" },
     { name = "structlog", specifier = ">=24" },
@@ -1355,14 +1355,14 @@ wheels = [
 
 [[package]]
 name = "omegaconf"
-version = "2.4.0.dev12"
+version = "2.4.0.dev13"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pyyaml" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/26/bf/5de71e337d1747d1be28fa119be6c758318e1a9edcd476cc297ea3b9045e/omegaconf-2.4.0.dev12.tar.gz", hash = "sha256:9b50449c529abfb526139c972d85fed4b478f3aff6d82f408bad495003b7ad01", size = 3466145, upload-time = "2026-06-27T17:46:43.981Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/a1/15/74f85f44f696ae0ba5b0e443d6740711e581a233423df3cc836070c499bf/omegaconf-2.4.0.dev13.tar.gz", hash = "sha256:11641b52e3df4194e560c158fbae277550084512d7a3f73955e0f51781625432", size = 3478118, upload-time = "2026-07-18T20:23:54.106Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/6c/ac/9770aa7460f40c87036b8045fed672344805463d955095462e218b3b2d4c/omegaconf-2.4.0.dev12-py3-none-any.whl", hash = "sha256:6baf8e5cc60156b1d2ae9f682270dc727466135d55cabd38208e6e21ec010a6d", size = 234340, upload-time = "2026-06-27T17:46:41.263Z" },
+    { url = "https://files.pythonhosted.org/packages/7a/ff/bb1e91f6ccf8fd529125745d570e869bfa9e9b925f83dc75c93406561056/omegaconf-2.4.0.dev13-py3-none-any.whl", hash = "sha256:a9725a3b578e9ab4b95bd7413751133287740ee4eeb7644c233821380889fd3d", size = 240075, upload-time = "2026-07-18T20:23:50.911Z" },
 ]
 
 [[package]]
